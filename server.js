@@ -570,6 +570,15 @@ app.get('/download/bundle', (req, res) => {
     }
 });
 
+app.get('/download/core', (req, res) => {
+    const corePath = path.join(__dirname, 'public', 'downloads', 'starlite-core.jar');
+    if (fs.existsSync(corePath)) {
+        res.download(corePath, 'starlite-core.jar');
+    } else {
+        res.status(404).send('Client core not found');
+    }
+});
+
 // Fallback to index.html for SPA
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
