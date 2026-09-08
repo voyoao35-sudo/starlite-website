@@ -1,0 +1,9 @@
+{
+  "owner": {
+    "username": "ВАШ_НИК_НА_GITHUB",
+    "email": "ВАШ_EMAIL@example.com"
+  },
+  "records": {
+    "CNAME": "ИМЯ_СЕРВИСА_НА_KOYEB.koyeb.app"
+  }
+}
