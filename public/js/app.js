@@ -85,11 +85,11 @@ function renderHeaderAuth() {
         if (currentUser.role === 'admin') roleBadge = 'ROOT';
         else if (currentUser.role === 'media') roleBadge = 'MEDIA';
 
-        const userAv = currentUser.avatar || '/avatars/default.svg';
+        const userAv = currentUser.avatar || '/avatars/default.png';
         container.innerHTML = `
             <div class="flex items-center gap-2">
                 <button onclick="openCabinetView()" class="btn-winston text-xs py-1.5 px-3.5 font-semibold flex items-center gap-2">
-                    <img id="nav-avatar" src="${userAv}" onerror="this.src='/avatars/default.svg'" alt="avatar" class="w-4 h-4 rounded-full bg-white/20 object-cover">
+                    <img id="nav-avatar" src="${userAv}" onerror="this.src='/avatars/default.png'" alt="avatar" class="w-4 h-4 rounded-full bg-white/20 object-cover">
                     <span>${currentUser.username}</span>
                     <span class="text-[10px] opacity-75 font-mono">${roleBadge}</span>
                 </button>
@@ -244,8 +244,8 @@ function renderCabinetData() {
     // Header info
     const cabAvatar = document.getElementById('cab-avatar');
     if (cabAvatar) {
-        cabAvatar.src = currentUser.avatar || '/avatars/default.svg';
-        cabAvatar.onerror = function() { this.src = '/avatars/default.svg'; };
+        cabAvatar.src = currentUser.avatar || '/avatars/default.png';
+        cabAvatar.onerror = function() { this.src = '/avatars/default.png'; };
     }
     document.getElementById('cab-username').textContent = currentUser.username;
     document.getElementById('cab-info-username').textContent = currentUser.username;

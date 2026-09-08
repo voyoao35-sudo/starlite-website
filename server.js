@@ -579,6 +579,49 @@ app.get('/download/core', (req, res) => {
     }
 });
 
+// Explicit Avatar routes: Never return HTML for avatar files
+app.get('/avatars/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const avatarsDir = path.join(__dirname, 'public', 'avatars');
+    const targetFile = path.join(avatarsDir, filename);
+
+    if (fs.existsSync(targetFile) && fs.statSync(targetFile).isFile()) {
+        const ext = path.extname(filename).toLowerCase();
+        if (ext === '.png') res.set('Content-Type', 'image/png');
+        else if (ext === '.jpg' || ext === '.jpeg') res.set('Content-Type', 'image/jpeg');
+        else if (ext === '.svg') res.set('Content-Type', 'image/svg+xml');
+        return res.sendFile(targetFile);
+    }
+
+    const defaultFile = path.join(avatarsDir, 'default.png');
+    if (fs.existsSync(defaultFile)) {
+        res.set('Content-Type', 'image/png');
+        return res.sendFile(defaultFile);
+    }
+
+    return res.status(404).send('Avatar not found');
+});
+
+// Dedicated API endpoint to get user avatar by UID
+app.get('/api/avatar/:uid', (req, res) => {
+    const uid = req.params.uid;
+    const avatarsDir = path.join(__dirname, 'public', 'avatars');
+    const userFile = path.join(avatarsDir, `${uid}.png`);
+
+    if (fs.existsSync(userFile) && fs.statSync(userFile).isFile()) {
+        res.set('Content-Type', 'image/png');
+        return res.sendFile(userFile);
+    }
+
+    const defaultFile = path.join(avatarsDir, 'default.png');
+    if (fs.existsSync(defaultFile)) {
+        res.set('Content-Type', 'image/png');
+        return res.sendFile(defaultFile);
+    }
+
+    return res.status(404).send('Avatar not found');
+});
+
 // Fallback to index.html for SPA
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

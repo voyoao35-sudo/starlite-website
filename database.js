@@ -41,7 +41,7 @@ function loadDb() {
                     passwordHash: hash,
                     passwordSalt: salt,
                     role: 'admin',
-                    avatar: '/avatars/default.svg',
+                    avatar: '/avatars/default.png',
                     telegram: '',
                     hwid: null,
                     lastHwidReset: 0,
@@ -63,8 +63,8 @@ function loadDb() {
                 if (!admin.subscription) {
                     admin.subscription = { active: true, type: 'lifetime', expiresAt: 'lifetime' };
                 }
-                if (!admin.avatar || admin.avatar.includes('dicebear.com')) {
-                    admin.avatar = '/avatars/default.svg';
+                if (!admin.avatar || admin.avatar.includes('dicebear.com') || admin.avatar.includes('.svg')) {
+                    admin.avatar = '/avatars/default.png';
                 }
                 saveDb();
             }
@@ -74,8 +74,8 @@ function loadDb() {
                 if (!u.activity) u.activity = [];
                 if (!u.role) u.role = 'user';
                 if (!u.email) u.email = `${u.username}@gmail.com`;
-                if (!u.avatar || u.avatar.includes('dicebear.com')) {
-                    u.avatar = '/avatars/default.svg';
+                if (!u.avatar || u.avatar.includes('dicebear.com') || u.avatar.includes('.svg')) {
+                    u.avatar = '/avatars/default.png';
                 }
                 if (u.activity.length === 0) {
                     u.activity.push({
@@ -204,7 +204,7 @@ function registerUser(username, password, email) {
         passwordHash: hash,
         passwordSalt: salt,
         role: isFirstUser ? 'admin' : 'user',
-        avatar: '/avatars/default.svg',
+        avatar: '/avatars/default.png',
         telegram: '',
         hwid: null,
         lastHwidReset: 0,
@@ -285,8 +285,8 @@ function sanitizeUser(user) {
     }
 
     let avatarUrl = user.avatar;
-    if (!avatarUrl || avatarUrl.includes('dicebear.com')) {
-        avatarUrl = '/avatars/default.svg';
+    if (!avatarUrl || avatarUrl.includes('dicebear.com') || avatarUrl.includes('.svg')) {
+        avatarUrl = '/avatars/default.png';
     }
 
     return {
