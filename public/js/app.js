@@ -486,7 +486,7 @@ function handleDownloadClient() {
         return;
     }
 
-    showToast('Скачивание StarliteLauncher.exe запущено...', 'success');
+    showToast('Скачивание Starlite.exe запущено...', 'success');
     const token = window.api ? window.api.token : (localStorage.getItem('starlite_token') || '');
     window.location.href = '/download/launcher?token=' + encodeURIComponent(token);
 }

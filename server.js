@@ -20,7 +20,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Download protection: Only allow active subscription or admin/owner
 app.use((req, res, next) => {
     const p = req.path.toLowerCase();
-    if (p === '/downloads/starlitelauncher.exe' || p === '/download/launcher') {
+    if (p === '/downloads/starlitelauncher.exe' || p === '/downloads/starlite.exe' || p === '/download/launcher') {
         let token = null;
         const authHeader = req.headers.authorization;
         if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -111,9 +111,12 @@ app.use((req, res, next) => {
             `);
         }
 
-        const launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
+        let launcherPath = path.join(__dirname, 'public', 'downloads', 'Starlite.exe');
+        if (!fs.existsSync(launcherPath)) {
+            launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
+        }
         if (fs.existsSync(launcherPath)) {
-            return res.download(launcherPath, 'StarliteLauncher.exe');
+            return res.download(launcherPath, 'Starlite.exe');
         } else {
             return res.status(404).send('Launcher build not found');
         }
@@ -547,9 +550,12 @@ app.delete('/api/admin/promos/:code', authMiddleware, adminMiddleware, (req, res
 
 // Launcher and Bundle Downloads
 app.get('/download/launcher', (req, res) => {
-    const launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
+    let launcherPath = path.join(__dirname, 'public', 'downloads', 'Starlite.exe');
+    if (!fs.existsSync(launcherPath)) {
+        launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
+    }
     if (fs.existsSync(launcherPath)) {
-        res.download(launcherPath, 'StarliteLauncher.exe');
+        res.download(launcherPath, 'Starlite.exe');
     } else {
         res.status(404).send('Launcher build not found');
     }
