@@ -627,6 +627,15 @@ app.get('/download/core', (req, res) => {
     }
 });
 
+app.get('/download/assets', (req, res) => {
+    const assetsPath = path.join(__dirname, 'public', 'downloads', 'starlite-assets.zip');
+    if (fs.existsSync(assetsPath)) {
+        res.download(assetsPath, 'starlite-assets.zip');
+    } else {
+        res.status(404).send('Client assets not found');
+    }
+});
+
 // Explicit Avatar routes: Never return HTML for avatar files
 app.get('/avatars/:filename', (req, res) => {
     const filename = req.params.filename;
