@@ -561,9 +561,57 @@ app.get('/download/launcher', (req, res) => {
     }
 });
 
+function assembleBundleIfPartsExist() {
+    try {
+        const bundlePath = path.join(__dirname, 'public', 'downloads', 'starlite-bundle.zip');
+        const downloadsDir = path.join(__dirname, 'public', 'downloads');
+
+        if (fs.existsSync(bundlePath) && fs.statSync(bundlePath).size > 300 * 1024 * 1024) {
+            return bundlePath;
+        }
+
+        const partFiles = [];
+        let idx = 1;
+        while (true) {
+            const part = path.join(downloadsDir, `bundle_part${idx}.dat`);
+            if (fs.existsSync(part)) {
+                partFiles.push(part);
+                idx++;
+            } else {
+                break;
+            }
+        }
+
+        if (partFiles.length > 0) {
+            console.log(`[Bundle] Assembling starlite-bundle.zip from ${partFiles.length} parts...`);
+            const tmpPath = bundlePath + '.tmp';
+            const outFd = fs.openSync(tmpPath, 'w');
+            for (const p of partFiles) {
+                const buf = fs.readFileSync(p);
+                fs.writeSync(outFd, buf, 0, buf.length);
+            }
+            fs.closeSync(outFd);
+
+            if (fs.existsSync(bundlePath)) {
+                try { fs.unlinkSync(bundlePath); } catch (_) {}
+            }
+            fs.renameSync(tmpPath, bundlePath);
+            console.log(`[Bundle] starlite-bundle.zip assembled successfully! Size: ${Math.round(fs.statSync(bundlePath).size / 1024 / 1024)} MB`);
+            return bundlePath;
+        }
+    } catch (err) {
+        console.error('[Bundle] Error assembling bundle:', err.message);
+    }
+    return null;
+}
+
 app.get('/download/bundle', (req, res) => {
-    const bundlePath = path.join(__dirname, 'public', 'downloads', 'starlite-bundle.zip');
-    if (fs.existsSync(bundlePath)) {
+    let bundlePath = path.join(__dirname, 'public', 'downloads', 'starlite-bundle.zip');
+    if (!fs.existsSync(bundlePath) || fs.statSync(bundlePath).size < 300 * 1024 * 1024) {
+        assembleBundleIfPartsExist();
+    }
+
+    if (fs.existsSync(bundlePath) && fs.statSync(bundlePath).size > 300 * 1024 * 1024) {
         res.download(bundlePath, 'starlite-bundle.zip');
     } else {
         res.status(404).send('Client bundle not found');
@@ -664,6 +712,9 @@ app.listen(PORT, async () => {
     console.log(`Starlite Client Web Server running!`);
     console.log(`Local URL: http://localhost:${PORT}`);
     console.log('=============================================');
+
+    // Assemble game bundle from chunks if needed
+    assembleBundleIfPartsExist();
 
     // Initialize MongoDB Atlas connection if MONGODB_URI is provided
     if (db.initMongo) {
