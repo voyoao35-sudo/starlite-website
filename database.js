@@ -21,7 +21,10 @@ let db = {
 function loadDb() {
     try {
         if (fs.existsSync(DB_FILE)) {
-            const raw = fs.readFileSync(DB_FILE, 'utf8');
+            let raw = fs.readFileSync(DB_FILE, 'utf8');
+            if (raw.charCodeAt(0) === 0xFEFF) {
+                raw = raw.slice(1);
+            }
             db = JSON.parse(raw);
             if (!db.meta) db.meta = { nextUid: 1 };
             if (!db.users) db.users = [];
@@ -96,14 +99,134 @@ function loadDb() {
     }
 }
 
-function saveDb() {
+let MongoClient = null;
+try {
+    MongoClient = require('mongodb').MongoClient;
+} catch (_) {}
+
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URL || null;
+let mongoClient = null;
+let mongoDb = null;
+let mongoCollection = null;
+let isMongoConnected = false;
+let mongoSyncTimer = null;
+let isSyncingToMongo = false;
+let pendingMongoSync = false;
+
+async function initMongo() {
+    if (!MONGODB_URI) {
+        console.log('[Database] MONGODB_URI is not set. Using local JSON database storage.');
+        return;
+    }
+    if (!MongoClient) {
+        console.log('[Database] mongodb package not loaded. Using local storage.');
+        return;
+    }
+
+    try {
+        console.log('[Database] Connecting to MongoDB Atlas...');
+        mongoClient = new MongoClient(MONGODB_URI, {
+            serverSelectionTimeoutMS: 10000,
+            connectTimeoutMS: 10000
+        });
+        await mongoClient.connect();
+        mongoDb = mongoClient.db('starlite');
+        mongoCollection = mongoDb.collection('state');
+        isMongoConnected = true;
+        console.log('[Database] Connected to MongoDB Atlas successfully!');
+
+        // Check for existing remote database state
+        const remoteDoc = await mongoCollection.findOne({ _id: 'db_state' });
+        if (remoteDoc && remoteDoc.data && Array.isArray(remoteDoc.data.users) && remoteDoc.data.users.length > 0) {
+            console.log(`[Database] Loaded ${remoteDoc.data.users.length} users and ${remoteDoc.data.keys ? remoteDoc.data.keys.length : 0} keys from MongoDB Atlas!`);
+            db = remoteDoc.data;
+            if (!db.meta) db.meta = { nextUid: 1 };
+            if (!db.users) db.users = [];
+            if (!db.keys) db.keys = [];
+            if (!db.promos) db.promos = [];
+            if (!db.sessions) db.sessions = {};
+            if (!db.hwidResets) db.hwidResets = [];
+
+            // Restore avatars to disk if present
+            restoreAvatarsToDisk();
+            saveDbLocal();
+        } else {
+            console.log('[Database] Remote MongoDB is empty. Seeding initial data from local database.json...');
+            await syncToMongoNow();
+        }
+    } catch (err) {
+        console.error('[Database] MongoDB connection failed:', err.message);
+        console.log('[Database] Falling back to local JSON database storage.');
+    }
+}
+
+function restoreAvatarsToDisk() {
+    try {
+        const avatarsDir = path.join(__dirname, 'public', 'avatars');
+        if (!fs.existsSync(avatarsDir)) {
+            fs.mkdirSync(avatarsDir, { recursive: true });
+        }
+        if (db.users && Array.isArray(db.users)) {
+            for (const u of db.users) {
+                if (u.avatarBase64 && u.uid) {
+                    const filePath = path.join(avatarsDir, `${u.uid}.png`);
+                    const matches = u.avatarBase64.match(/^data:image\/[a-zA-Z0-9+]+;base64,(.+)$/);
+                    const b64 = matches ? matches[1] : u.avatarBase64;
+                    const buf = Buffer.from(b64, 'base64');
+                    fs.writeFileSync(filePath, buf);
+                }
+            }
+        }
+    } catch (e) {
+        console.error('[Database] Error restoring avatars to disk:', e.message);
+    }
+}
+
+async function syncToMongoNow() {
+    if (!isMongoConnected || !mongoCollection) return;
+    if (isSyncingToMongo) {
+        pendingMongoSync = true;
+        return;
+    }
+    isSyncingToMongo = true;
+    try {
+        await mongoCollection.replaceOne(
+            { _id: 'db_state' },
+            { _id: 'db_state', data: db, updatedAt: new Date() },
+            { upsert: true }
+        );
+    } catch (e) {
+        console.error('[Database] Error syncing to MongoDB:', e.message);
+    } finally {
+        isSyncingToMongo = false;
+        if (pendingMongoSync) {
+            pendingMongoSync = false;
+            syncToMongoNow();
+        }
+    }
+}
+
+function scheduleMongoSync() {
+    if (!isMongoConnected) return;
+    if (mongoSyncTimer) clearTimeout(mongoSyncTimer);
+    mongoSyncTimer = setTimeout(() => {
+        syncToMongoNow();
+    }, 500);
+}
+
+function saveDbLocal() {
     try {
         const tmp = DB_FILE + '.tmp';
         fs.writeFileSync(tmp, JSON.stringify(db, null, 2), 'utf8');
         fs.renameSync(tmp, DB_FILE);
     } catch (e) {
-        console.error('Failed to save db:', e.message);
+        console.error('Failed to save db local:', e.message);
     }
+}
+
+function saveDb() {
+    saveDbLocal();
+    scheduleMongoSync();
 }
 
 loadDb();
@@ -677,5 +800,6 @@ module.exports = {
     adminChangeRole,
     getAllUsers: () => db.users.map(sanitizeUser),
     getAllKeys: () => db.keys,
-    getStats
+    getStats,
+    initMongo
 };

@@ -1,4 +1,4 @@
-﻿{
+{
   "meta": {
     "nextUid": 15
   },
@@ -6,8 +6,8 @@
     {
       "uid": 1,
       "username": "admin",
-      "passwordHash": "c905a2a4fea47413a119ec59e075e936540162534ea1acce75738f67aa2b2a55c41ddb6a80567a5b12bd2bc3f10ff1a52a2852dad876559ab55eb6bc0d4b9e57",
-      "passwordSalt": "684778a7bf70b1eb3f2787b90107cbb9",
+      "passwordHash": "3753970a352b3e4b5cc4a7534ca37e856ab6477e3b038fc7d0263e14ef406d327871c07f9920af1462494b35bfdb19e43353d00d2e1c02f03efa6bf3b1ad8314",
+      "passwordSalt": "63c7dd7dd9da7a9437682b526c4022cc",
       "role": "admin",
       "avatar": "/avatars/1.png?v=1788883900420",
       "telegram": "",

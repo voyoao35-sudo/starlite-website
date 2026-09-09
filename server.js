@@ -294,7 +294,7 @@ app.post('/api/user/avatar', authMiddleware, (req, res) => {
         } catch (_) {}
 
         const avatarUrl = `/avatars/${fileName}?v=${Date.now()}`;
-        const user = db.updateUserProfile(req.user.uid, { avatar: avatarUrl });
+        const user = db.updateUserProfile(req.user.uid, { avatar: avatarUrl, avatarBase64: imageBase64 });
 
         res.json({ success: true, user, avatarUrl });
     } catch (e) {
@@ -593,6 +593,23 @@ app.get('/avatars/:filename', (req, res) => {
         return res.sendFile(targetFile);
     }
 
+    // Check if filename matches <uid>.png and user has avatarBase64 in database
+    const uidMatch = filename.match(/^(\d+)\.png$/);
+    if (uidMatch) {
+        const uid = parseInt(uidMatch[1], 10);
+        const user = db.findUserByUid(uid);
+        if (user && user.avatarBase64) {
+            try {
+                const matches = user.avatarBase64.match(/^data:image\/[a-zA-Z0-9+]+;base64,(.+)$/);
+                const b64 = matches ? matches[1] : user.avatarBase64;
+                const buf = Buffer.from(b64, 'base64');
+                try { fs.writeFileSync(targetFile, buf); } catch (_) {}
+                res.set('Content-Type', 'image/png');
+                return res.send(buf);
+            } catch (_) {}
+        }
+    }
+
     const defaultFile = path.join(avatarsDir, 'default.png');
     if (fs.existsSync(defaultFile)) {
         res.set('Content-Type', 'image/png');
@@ -604,13 +621,28 @@ app.get('/avatars/:filename', (req, res) => {
 
 // Dedicated API endpoint to get user avatar by UID
 app.get('/api/avatar/:uid', (req, res) => {
-    const uid = req.params.uid;
+    const uid = parseInt(req.params.uid, 10);
     const avatarsDir = path.join(__dirname, 'public', 'avatars');
     const userFile = path.join(avatarsDir, `${uid}.png`);
 
     if (fs.existsSync(userFile) && fs.statSync(userFile).isFile()) {
         res.set('Content-Type', 'image/png');
         return res.sendFile(userFile);
+    }
+
+    // Check if user has avatarBase64 in database
+    if (uid) {
+        const user = db.findUserByUid(uid);
+        if (user && user.avatarBase64) {
+            try {
+                const matches = user.avatarBase64.match(/^data:image\/[a-zA-Z0-9+]+;base64,(.+)$/);
+                const b64 = matches ? matches[1] : user.avatarBase64;
+                const buf = Buffer.from(b64, 'base64');
+                try { fs.writeFileSync(userFile, buf); } catch (_) {}
+                res.set('Content-Type', 'image/png');
+                return res.send(buf);
+            } catch (_) {}
+        }
     }
 
     const defaultFile = path.join(avatarsDir, 'default.png');
@@ -627,9 +659,14 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log('=============================================');
     console.log(`Starlite Client Web Server running!`);
     console.log(`Local URL: http://localhost:${PORT}`);
     console.log('=============================================');
+
+    // Initialize MongoDB Atlas connection if MONGODB_URI is provided
+    if (db.initMongo) {
+        await db.initMongo();
+    }
 });
