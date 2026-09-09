@@ -104,7 +104,13 @@ try {
     MongoClient = require('mongodb').MongoClient;
 } catch (_) {}
 
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URL || null;
+const dns = require('dns');
+try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (_) {}
+
+const DEFAULT_MONGO_URI = 'mongodb+srv://voyoao35_db_user:484TBWDW3zUPDtOl@starlite.mdqa51e.mongodb.net/?retryWrites=true&w=majority&appName=Starlite';
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URL || DEFAULT_MONGO_URI;
 let mongoClient = null;
 let mongoDb = null;
 let mongoCollection = null;
