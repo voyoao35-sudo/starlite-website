@@ -62,7 +62,7 @@ function createDownloads(directory, fetchFile = globalThis.fetch) {
             const results = await Promise.allSettled(Array.from({ length: Math.min(4, queue.length) }, async () => {
                 while (queue.length) {
                     const { part, file, url } = queue.shift();
-                    const response = await fetchFile(url, { signal: AbortSignal.timeout(120000) });
+                    const response = await fetchFile(url, { signal: AbortSignal.timeout(600000) });
                     if (!response.ok) throw new Error(`Release part download failed: ${part.name}`);
                     const content = Buffer.from(await response.arrayBuffer());
                     if (content.length !== part.size || crypto.createHash('sha256').update(content).digest('hex') !== part.sha256) throw new Error(`Corrupt remote release part: ${part.name}`);
