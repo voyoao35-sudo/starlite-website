@@ -1,0 +1,8 @@
+.git
+node_modules
+*.log
+current_url.txt
+permanent_url.txt
+cloudflared.exe
+public/downloads/starlite-bundle.zip
+public/downloads/*.tmp
