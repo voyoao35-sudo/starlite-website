@@ -7,6 +7,40 @@ const crypto = require('crypto');
 const { createDownloads } = require('./downloads');
 const hash = data => crypto.createHash('sha256').update(data).digest('hex');
 
+test('core proxy shares requests, checks hash, reuses cache and never redirects clients', async () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'starlite-core-'));
+    try {
+        const content = Buffer.from('verified client core');
+        const release = { schema: 1, bundle: { sha256: 'a'.repeat(64) }, core: {
+            size: content.length, sha256: hash(content),
+            url: 'https://github.com/voyoao35-sudo/starlite-website/releases/download/test/starlite-core.jar'
+        } };
+        fs.writeFileSync(path.join(directory, 'release.json'), JSON.stringify(release));
+        let calls = 0;
+        const service = createDownloads(directory, async () => { calls++; return new Response(content); });
+        const files = await Promise.all([service.prepareAsset('core'), service.prepareAsset('core')]);
+        assert.equal(calls, 1);
+        assert.equal(files[0], files[1]);
+        assert.deepEqual(fs.readFileSync(await service.prepareAsset('core')), content);
+        assert.equal(calls, 1);
+        fs.unlinkSync(files[0]);
+        const bad = createDownloads(directory, async () => new Response('corrupt'));
+        await assert.rejects(bad.prepareAsset('core'), /Corrupt release asset/);
+        assert.equal(fs.existsSync(files[0]), false);
+        assert.equal(fs.existsSync(files[0] + '.tmp'), false);
+        const oversized = createDownloads(directory, async () => new Response(Buffer.alloc(content.length + 1)));
+        await assert.rejects(oversized.prepareAsset('core'), /Oversized release asset/);
+        let offline = true;
+        const retry = createDownloads(directory, async () => {
+            if (offline) throw new Error('offline upstream');
+            return new Response(content);
+        });
+        await assert.rejects(retry.prepareAsset('core'), /offline upstream/);
+        offline = false;
+        assert.deepEqual(fs.readFileSync(await retry.prepareAsset('core')), content);
+    } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+});
+
 test('release assets use only this repository; external URLs are rejected', () => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'starlite-release-'));
     try {

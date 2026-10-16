@@ -17,6 +17,7 @@ function createDownloads(directory, fetchFile = globalThis.fetch) {
     let verified = null;
     let pending = null;
     let pendingHash = null;
+    const assetJobs = new Map();
     function manifest() {
         const release = JSON.parse(fs.readFileSync(path.join(directory, 'release.json'), 'utf8'));
         if (release.schema !== 1 || !release.bundle || !/^[a-f0-9]{64}$/.test(release.bundle.sha256)) {
@@ -111,6 +112,44 @@ function createDownloads(directory, fetchFile = globalThis.fetch) {
         verified = null;
         return assemble();
     }
-    return { manifest, assemble, remoteUrl, prepare };
+    function prepareAsset(kind) {
+        if (kind !== 'core' && kind !== 'assets') throw new Error('Invalid asset kind');
+        const item = manifest()[kind];
+        if (!item || !Number.isSafeInteger(item.size) || item.size <= 0 || item.size > 256 * 1024 * 1024
+            || !/^[a-f0-9]{64}$/.test(item.sha256)) throw new Error('Invalid asset metadata');
+        const url = remoteUrl(kind);
+        const key = `${kind}:${item.sha256}`;
+        if (assetJobs.has(key)) return assetJobs.get(key);
+        const target = path.join(directory, `${kind}-${item.sha256}.cache`);
+        const job = (async () => {
+            if (fs.existsSync(target) && fs.statSync(target).size === item.size && sha256(target) === item.sha256) return target;
+            if (!url) throw new Error('Missing release asset URL');
+            const temporary = target + '.tmp';
+            try {
+                const response = await fetchFile(url, { signal: AbortSignal.timeout(120000) });
+                if (!response.ok || !response.body) throw new Error('Release asset download failed');
+                const hash = crypto.createHash('sha256');
+                let size = 0;
+                const file = fs.openSync(temporary, 'w');
+                try {
+                    for await (const chunk of response.body) {
+                        const buffer = Buffer.from(chunk);
+                        size += buffer.length;
+                        if (size > item.size) throw new Error('Oversized release asset');
+                        hash.update(buffer);
+                        let offset = 0;
+                        while (offset < buffer.length) offset += fs.writeSync(file, buffer, offset, buffer.length - offset);
+                    }
+                } finally { fs.closeSync(file); }
+                if (size !== item.size || hash.digest('hex') !== item.sha256) throw new Error('Corrupt release asset');
+                fs.renameSync(temporary, target);
+                return target;
+            } finally { if (fs.existsSync(temporary)) fs.unlinkSync(temporary); }
+        })();
+        assetJobs.set(key, job);
+        job.finally(() => { if (assetJobs.get(key) === job) assetJobs.delete(key); }).catch(() => {});
+        return job;
+    }
+    return { manifest, assemble, remoteUrl, prepare, prepareAsset };
 }
 module.exports = { createDownloads, sha256 };

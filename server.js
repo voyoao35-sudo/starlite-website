@@ -587,33 +587,19 @@ app.get('/download/bundle', async (req, res) => {
     else res.status(503).send('Client bundle unavailable or failed integrity verification');
 });
 
-app.get('/download/core', (req, res) => {
-    res.set('Cache-Control', 'no-store');
-    try {
-        const remote = downloads.remoteUrl('core');
-        if (remote) return res.redirect(302, remote);
-    } catch (error) { return res.status(503).send('Client release unavailable'); }
-    const corePath = path.join(__dirname, 'public', 'downloads', 'starlite-core.jar');
-    if (fs.existsSync(corePath)) {
-        res.download(corePath, 'starlite-core.jar');
-    } else {
-        res.status(404).send('Client core not found');
-    }
-});
-
-app.get('/download/assets', (req, res) => {
-    res.set('Cache-Control', 'no-store');
-    try {
-        const remote = downloads.remoteUrl('assets');
-        if (remote) return res.redirect(302, remote);
-    } catch (error) { return res.status(503).send('Client release unavailable'); }
-    const assetsPath = path.join(__dirname, 'public', 'downloads', 'starlite-assets.zip');
-    if (fs.existsSync(assetsPath)) {
-        res.download(assetsPath, 'starlite-assets.zip');
-    } else {
-        res.status(404).send('Client assets not found');
-    }
-});
+// Proxy verified release assets: clients do not need direct access to GitHub.
+for (const [kind, name] of [['core', 'starlite-core.jar'], ['assets', 'starlite-assets.zip']]) {
+    app.get('/download/' + kind, async (req, res) => {
+        res.set('Cache-Control', 'no-store');
+        try {
+            const file = await downloads.prepareAsset(kind);
+            res.download(file, name);
+        } catch (error) {
+            console.error('[Release asset]', kind, error.message);
+            res.status(503).send('Release asset unavailable or failed integrity verification');
+        }
+    });
+}
 
 // Explicit Avatar routes: Never return HTML for avatar files
 app.get('/avatars/:filename', (req, res) => {
@@ -703,6 +689,7 @@ app.listen(PORT, async () => {
 
     // Assemble game bundle from chunks if needed
     downloads.prepare().catch(error => console.error('[Bundle]', error.message));
+    downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
 
     // Initialize MongoDB Atlas connection if MONGODB_URI is provided
     if (db.initMongo) {

@@ -8,3 +8,5 @@ permanent_url.txt
 !public/downloads/starlite-assets.zip
 !public/downloads/StarliteLauncher.zip
 public/downloads/starlite-bundle.zip
+public/downloads/*.cache
+public/downloads/*.tmp

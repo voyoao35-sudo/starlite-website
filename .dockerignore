@@ -6,3 +6,4 @@ permanent_url.txt
 cloudflared.exe
 public/downloads/starlite-bundle.zip
 public/downloads/*.tmp
+public/downloads/*.cache
