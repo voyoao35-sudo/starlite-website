@@ -113,7 +113,7 @@ function createDownloads(directory, fetchFile = globalThis.fetch) {
         return assemble();
     }
     function prepareAsset(kind) {
-        if (kind !== 'core' && kind !== 'assets') throw new Error('Invalid asset kind');
+        if (kind !== 'core' && kind !== 'assets' && kind !== 'java') throw new Error('Invalid asset kind');
         const item = manifest()[kind];
         if (!item || !Number.isSafeInteger(item.size) || item.size <= 0 || item.size > 256 * 1024 * 1024
             || !/^[a-f0-9]{64}$/.test(item.sha256)) throw new Error('Invalid asset metadata');

@@ -305,5 +305,11 @@
     "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-2026.10.17-24a3cc8b9b9e-cf0095ba/starlite-assets.zip",
     "size": 20720084,
     "sha256": "ef80c7a44d344527cd100cbbdc650d9d402917904b074853c0d0e48bec712ec1"
+  },
+  "java": {
+    "version": "21.0.12.12.1",
+    "size": 202335724,
+    "sha256": "8945e414866b498f0587ee78411e0abff5071770d56eab8fe6d13eb3766a8631",
+    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/launcher-2026.10.18-java21/java21.zip"
   }
 }

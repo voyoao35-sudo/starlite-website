@@ -606,8 +606,8 @@ app.get('/download/bundle', async (req, res) => {
 });
 
 // Proxy verified release assets: clients do not need direct access to GitHub.
-for (const [kind, name] of [['core', 'starlite-core.jar'], ['assets', 'starlite-assets.zip']]) {
-    app.get('/download/' + kind, async (req, res) => {
+for (const [kind, name] of [['core', 'starlite-core.jar'], ['assets', 'starlite-assets.zip'], ['java', 'java21.zip']]) {
+    app.get('/download/' + (kind === 'java' ? 'java21' : kind), async (req, res) => {
         res.set('Cache-Control', 'no-store');
         try {
             const file = await downloads.prepareAsset(kind);

@@ -7,6 +7,29 @@ const crypto = require('crypto');
 const { createDownloads } = require('./downloads');
 const hash = data => crypto.createHash('sha256').update(data).digest('hex');
 
+test('Java mirror uses its pinned runtime metadata independently of the client core', async () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'starlite-java-'));
+    try {
+        const content = Buffer.from('portable Java archive');
+        fs.writeFileSync(path.join(directory, 'release.json'), JSON.stringify({
+            schema: 1, bundle: { sha256: 'a'.repeat(64) },
+            core: { size: 99, sha256: 'b'.repeat(64) },
+            java: { size: content.length, sha256: hash(content), url: 'https://github.com/voyoao35-sudo/starlite-website/releases/download/java-test/java21.zip' }
+        }));
+        let requests = 0;
+        const downloads = createDownloads(directory, async url => {
+            requests++;
+            assert.ok(url.endsWith('/java21.zip'));
+            return new Response(content);
+        });
+        const [one, two] = await Promise.all([downloads.prepareAsset('java'), downloads.prepareAsset('java')]);
+        assert.equal(one, two);
+        assert.deepEqual(fs.readFileSync(one), content);
+        assert.equal(await downloads.prepareAsset('java'), one);
+        assert.equal(requests, 1);
+    } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+});
+
 test('core proxy shares requests, checks hash, reuses cache and never redirects clients', async () => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'starlite-core-'));
     try {
