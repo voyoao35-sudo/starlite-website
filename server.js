@@ -562,6 +562,24 @@ app.get('/download/launcher', (req, res) => {
 });
 
 const downloads = require('./downloads').createDownloads(path.join(__dirname, 'public', 'downloads'));
+// Independent modern channel; legacy launchers keep their original manifest.
+const modernDownloads = require('./downloads').createDownloads(path.join(__dirname, 'public', 'downloads', '1.21.11'));
+app.get('/download/1.21.11/manifest', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    try { res.json(modernDownloads.manifest()); }
+    catch (error) { res.status(503).json({error: 'Modern release unavailable'}); }
+});
+app.get('/download/1.21.11/bundle', async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    try { const bundle = await modernDownloads.prepare(); res.download(bundle, 'starlite-bundle.zip'); }
+    catch (error) { console.error('[Modern bundle]', error.message); res.status(503).send('Modern release unavailable'); }
+});
+app.get('/download/1.21.11/core', async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    try { res.download(await modernDownloads.prepareAsset('core'), 'starlite-core.jar'); }
+    catch (error) { res.status(503).send('Modern core unavailable'); }
+});
+
 
 function assembleBundleIfPartsExist() {
     try { return downloads.assemble(); }

@@ -10,3 +10,8 @@ permanent_url.txt
 public/downloads/starlite-bundle.zip
 public/downloads/*.cache
 public/downloads/*.tmp
+
+public/downloads/1.21.11/*.zip
+public/downloads/1.21.11/*.cache
+public/downloads/1.21.11/*.tmp
+public/downloads/1.21.11/*.dat
