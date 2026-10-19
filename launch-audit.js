@@ -186,6 +186,15 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
                 } catch (e) { res.status(e.status || 500).json({ success: false, error: e.status ? e.message : 'Ошибка журнала запусков' }); }
             });
         }
+        app.post('/api/launcher/sessions/:id/screen_done', (req, res) => {
+            try {
+                const token = /^Launch ([a-f0-9]{64})$/.exec(req.headers.authorization || '')?.[1];
+                const session = lookup(req.params.id, token);
+                session.screenRequested = false;
+                save();
+                res.json({ success: true });
+            } catch (e) { res.status(e.status || 500).json({ success: false, error: e.status ? e.message : 'Error' }); }
+        });
         // ── endpoint для загрузки скриншота от лаунчера ──
         app.post('/api/launcher/sessions/:id/screen', async (req, res) => {
             try {
