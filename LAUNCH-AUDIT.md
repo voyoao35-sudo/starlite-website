@@ -24,8 +24,8 @@ UID и логин сервер берёт из авторизованного а
 
 ```
 STARLITE_TELEGRAM_TOKEN=<токен бота>
-STARLITE_TELEGRAM_OWNER_ID=1668656371
-STARLITE_TELEGRAM_CHAT_ID=1668656371
+STARLITE_TELEGRAM_OWNER_ID=<telegram-id-владельца>
+STARLITE_TELEGRAM_CHAT_ID=<telegram-id-личного-чата>
 ```
 
 Токен отсутствует в исходниках, EXE, HTML и Git. Локальный конфиг `.private/telegram.json` исключён из Git и Docker и ограничен ACL текущего Windows-пользователя.
