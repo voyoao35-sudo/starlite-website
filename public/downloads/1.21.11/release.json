@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "minecraft": "1.21.11",
-  "version": "1.21.11-2026.10.19-bc2e9b8a9f49",
+  "version": "1.21.11-2026.10.19-53c8418c0873",
   "runtimeId": "dfef95151c4e1d21f47f6a863dc60bc1261548d9beb35a0e231470e4b728816f",
   "core": {
-    "size": 18095807,
-    "sha256": "bc2e9b8a9f49293503331d696c5a1cb18e058f5f31a875fcc910d8531c0e413d",
-    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-bc2e9b8a9f49/starlite-core.jar"
+    "size": 18095819,
+    "sha256": "53c8418c087387b26f3ac7604766aaca310f980a6d502e8a8a3c0e5f8de7c8d1",
+    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-53c8418c0873/starlite-core.jar"
   },
   "bundle": {
     "size": 530124721,
