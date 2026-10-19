@@ -4,7 +4,7 @@
     "version":  "1.21.11-2026.10.19-33cc270fe25f",
     "runtimeId":  "dfef95151c4e1d21f47f6a863dc60bc1261548d9beb35a0e231470e4b728816f",
     "core":  {
-                 "size":  18090802,
+                 "size":  18099376,
                  "sha256":  "33cc270fe25f9981f0b461500d1b0b830037bbf9ed8ec29351f978bd851751b6",
                  "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-33cc270fe25f/starlite-core.jar"
              },
