@@ -161,6 +161,15 @@ function mediaOrAdminMiddleware(req, res, next) {
     next();
 }
 
+// Only account identity, client version and server time are recorded. No desktop capture or PC inventory.
+const launchAuditModule = require('./launch-audit');
+const auditTelegram = launchAuditModule.createTelegram(launchAuditModule.loadTelegramConfig(__dirname));
+let launchAuditReady = false;
+const launchAudit = launchAuditModule.createLaunchAudit({ db,
+    directory: process.env.STARLITE_AUDIT_DIR || path.join(__dirname, 'data', 'launch-audit'), telegram: auditTelegram,
+    isReady: () => launchAuditReady });
+launchAudit.install(app, authMiddleware);
+
 // ─── AUTH ROUTES ─────────────────────────────────────────────────────────────
 
 app.post('/api/auth/register', (req, res) => {
@@ -713,4 +722,6 @@ app.listen(PORT, async () => {
     if (db.initMongo) {
         await db.initMongo();
     }
+    launchAuditReady = true;
+    launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
 });

@@ -781,6 +781,8 @@ function getStats() {
 }
 
 module.exports = {
+    getLaunchAuditSessions: () => { if (!db.launchAuditSessions) db.launchAuditSessions = {}; return db.launchAuditSessions; },
+    saveLaunchAuditSessions: sessions => { db.launchAuditSessions = sessions; saveDb(); },
     findUserByUsername,
     findUserByUid,
     findUserByToken,

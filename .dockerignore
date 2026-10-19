@@ -1,4 +1,8 @@
 .git
+.private
+.env
+.env.*
+data/launch-audit
 node_modules
 *.log
 current_url.txt

@@ -1,4 +1,8 @@
 node_modules/
+.private/
+.env
+.env.*
+data/launch-audit/
 npm-debug.log
 .DS_Store
 cloudflared.exe
