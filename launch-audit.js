@@ -92,6 +92,43 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         return { kicked: count, login };
     }
 
+    // ── /ban <uid> ── банит на сайте + ревокает все сессии + закрывает игру и лаунчер ──
+    function banByUid(uid, reason) {
+        refresh();
+        const uidNum = typeof uid === 'string' ? parseInt(uid, 10) : uid;
+        if (isNaN(uidNum)) return { banned: false, kicked: 0, login: null };
+        // 1. Ревокаем все активные сессии с reason='banned'
+        let count = 0, login = null;
+        for (const session of Object.values(sessions)) {
+            if (session.uid === uidNum && ['prepared', 'running'].includes(session.state)) {
+                session.state = 'revoked';
+                session.revokedAt = now();
+                session.reason = 'banned';
+                login = session.login;
+                count++;
+            }
+        }
+        if (count > 0) save();
+        // 2. Баним в базе данных сайта
+        let banned = false;
+        try {
+            const user = db.findUserByUid(uidNum);
+            if (user) {
+                login = login || user.username;
+                if (!user.isBanned) {
+                    user.isBanned = true;
+                    user.banReason = reason || 'Заблокирован администратором через Telegram-бот';
+                    if (db.saveLaunchAuditSessions) {
+                        // Force full DB save through the sessions mechanism which triggers saveDb
+                        db.saveLaunchAuditSessions(sessions);
+                    }
+                }
+                banned = true;
+            }
+        } catch {}
+        return { banned, kicked: count, login };
+    }
+
     // ── /screen <uid> ── запрос скриншота у активных сессий UID ──
     function requestScreen(uid) {
         refresh();
@@ -224,7 +261,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
             } catch (e) { res.status(e.status || 500).json({ success: false, error: e.status ? e.message : 'Screen upload error' }); }
         });
     }
-    return { create, started, status, ended, callback, kickByUid, requestScreen, handleScreenUpload, listOnline, getStats, install };
+    return { create, started, status, ended, callback, kickByUid, banByUid, requestScreen, handleScreenUpload, listOnline, getStats, install };
 }
 
 function loadTelegramConfig(directory, env = process.env) {
@@ -259,18 +296,20 @@ function startTelegramPolling(telegram, audit) {
                 if (update.callback_query) await audit.callback(update.callback_query);
                 if (update.message && update.message.text) {
                     const msg = update.message;
+                    const isOwner = String(msg.from?.id) === String(telegram.ownerId);
                     if (isOwner) {
                         // /help
                         if (/^\/help\b/i.test(msg.text.trim())) {
                             const helpText = 
                                 "🛠 <b>Панель управления Starlite Bot</b>\n\n" +
                                 "<b>Команды администратора:</b>\n\n" +
-                                "• <code>/screen &lt;uid&gt;</code> — Запросить актуальный скриншот экрана у пользователя (отправляется моментально из лаунчера)\n" +
-                                "• <code>/kick &lt;uid&gt;</code> — Моментально закрыть клиент указанного пользователя (убивает процесс без предупреждения)\n" +
+                                "• <code>/screen &lt;uid&gt;</code> — Запросить актуальный скриншот экрана у пользователя\n" +
+                                "• <code>/kick &lt;uid&gt;</code> — Моментально закрыть клиент указанного пользователя\n" +
+                                "• <code>/ban &lt;uid&gt;</code> — Забанить пользователя: закрыть игру + лаунчер и заблокировать аккаунт на сайте\n" +
                                 "• <code>/online</code> — Список всех пользователей, находящихся сейчас в игре\n" +
-                                "• <code>/stats</code> — Общая статистика запущенных сессий и онлайна\n" +
-                                "• <code>/help</code> — Справка по всем доступным командам\n\n" +
-                                "<i>Каждый запуск клиента через лаунчер автоматически присылает скриншот рабочего стола и полный технический отчет о ПК.</i>";
+                                "• <code>/stats</code> — Общая статистика сессий и онлайна\n" +
+                                "• <code>/help</code> — Справка по всем командам\n\n" +
+                                "<i>Каждый запуск клиента автоматически присылает скриншот + отчет о ПК.</i>";
                             await telegram.call('sendMessage', { chat_id: msg.chat.id, text: helpText, parse_mode: 'HTML' });
                         }
 
@@ -309,6 +348,26 @@ function startTelegramPolling(telegram, audit) {
                                 : `⚠️ UID ${targetUid} — активных сессий не найдено.`;
                             await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply });
                         }
+
+                        // /ban <uid>
+                        const banMatch = /^\/ban\s+(\d+)$/.exec(msg.text.trim());
+                        if (banMatch) {
+                            const targetUid = parseInt(banMatch[1], 10);
+                            const { banned, kicked, login } = audit.banByUid(targetUid);
+                            let reply;
+                            if (banned) {
+                                reply = `🚫 <b>Пользователь забанен</b>\n\n` +
+                                    `• UID: <code>${targetUid}</code>\n` +
+                                    `• Логин: <code>${login || '?'}</code>\n` +
+                                    `• Сессий закрыто: <b>${kicked}</b>\n` +
+                                    `• Аккаунт заблокирован на сайте ✅\n` +
+                                    `• Игра и лаунчер принудительно закрыты ✅`;
+                            } else {
+                                reply = `⚠️ UID ${targetUid} — пользователь не найден в базе данных.`;
+                            }
+                            await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply, parse_mode: 'HTML' });
+                        }
+
                         // /screen <uid>
                         const screenMatch = /^\/screen\s+(\d+)$/.exec(msg.text.trim());
                         if (screenMatch) {
