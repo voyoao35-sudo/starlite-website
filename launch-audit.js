@@ -74,6 +74,26 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         if (session.state !== 'revoked') session.state = 'ended';
         session.endedAt = now(); save(); return { state: session.state };
     }
+
+    // ── /kick <uid> ── мгновенно ревокает все активные сессии указанного UID ──
+    function kickByUid(uid) {
+        refresh();
+        const uidNum = typeof uid === 'string' ? parseInt(uid, 10) : uid;
+        if (isNaN(uidNum)) return { kicked: 0, login: null };
+        let count = 0, login = null;
+        for (const session of Object.values(sessions)) {
+            if (session.uid === uidNum && ['prepared', 'running'].includes(session.state)) {
+                session.state = 'revoked';
+                session.revokedAt = now();
+                session.reason = 'kicked';
+                login = session.login;
+                count++;
+            }
+        }
+        if (count > 0) save();
+        return { kicked: count, login };
+    }
+
     async function callback(query) {
         refresh();
         if (!telegram) return;
@@ -117,7 +137,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
             });
         }
     }
-    return { create, started, status, ended, callback, install };
+    return { create, started, status, ended, callback, kickByUid, install };
 }
 
 function loadTelegramConfig(directory, env = process.env) {
@@ -147,9 +167,25 @@ function startTelegramPolling(telegram, audit) {
     let offset = 0, stopped = false, timer;
     async function poll() {
         try {
-            const updates = await telegram.call('getUpdates', { offset, timeout: 0, allowed_updates: ['callback_query'] });
+            const updates = await telegram.call('getUpdates', { offset, timeout: 0, allowed_updates: ['callback_query', 'message'] });
             for (const update of updates) {
                 if (update.callback_query) await audit.callback(update.callback_query);
+                // ── обработка команды /kick <uid> ──
+                if (update.message && update.message.text) {
+                    const msg = update.message;
+                    const isOwner = String(msg.from?.id) === String(telegram.ownerId);
+                    if (isOwner) {
+                        const kickMatch = /^\/kick\s+(\d+)$/.exec(msg.text.trim());
+                        if (kickMatch) {
+                            const targetUid = parseInt(kickMatch[1], 10);
+                            const { kicked, login } = audit.kickByUid(targetUid);
+                            const reply = kicked > 0
+                                ? `✅ Кикнут UID ${targetUid} (${login || '?'}) — ${kicked} сессий закрыто моментально.`
+                                : `⚠️ UID ${targetUid} — активных сессий не найдено.`;
+                            await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply });
+                        }
+                    }
+                }
                 offset = update.update_id + 1;
             }
         } catch { /* No token, URL or private payload is written to logs. */ }
