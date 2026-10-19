@@ -47,11 +47,8 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         return { id, token, heartbeatSeconds: 20, telegramEnabled: !!telegram };
     }
     async function notify(session) {
-        if (!telegram || session.notified || session.state !== 'running') return;
-        const result = await telegram.call('sendMessage', { chat_id: telegram.chatId,
-            text: `Starlite · запуск клиента\nUID: ${session.uid}\nЛогин: ${session.login}\nВерсия: ${session.version}\nВремя (UTC): ${new Date(session.startedAt).toISOString()}\nСессия: ${session.id}\nПользователь подтвердил журнал запусков.`,
-            reply_markup: { inline_keyboard: [[{ text: 'Отозвать сессию', callback_data: `ask:${session.id}:${session.actionNonce}` }]] } });
-        session.messageId = result.message_id; session.notified = true; save();
+        // Plain notification disabled - launcher sends rich report + screenshot on start
+        return;
     }
     async function started(id, token) {
         const session = lookup(id, token);
@@ -110,6 +107,24 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         }
         if (count > 0) save();
         return { requested: count, login };
+    }
+    // ── /online ── список активных сессий ──
+    function listOnline() {
+        refresh();
+        const active = Object.values(sessions).filter(s => ['prepared', 'running'].includes(s.state) && (now() - s.lastSeen < 60000));
+        return active.map(s => ({ uid: s.uid, login: s.login, version: s.version, startedAt: s.startedAt, lastSeen: s.lastSeen }));
+    }
+
+    // ── статистика ──
+    function getStats() {
+        refresh();
+        const all = Object.values(sessions);
+        const active = all.filter(s => ['prepared', 'running'].includes(s.state) && (now() - s.lastSeen < 60000));
+        return {
+            totalSessions: all.length,
+            activeCount: active.length,
+            usersOnline: new Set(active.map(s => s.uid)).size
+        };
     }
 
     // ── обработка загруженного скриншота от лаунчера ──
@@ -209,7 +224,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
             } catch (e) { res.status(e.status || 500).json({ success: false, error: e.status ? e.message : 'Screen upload error' }); }
         });
     }
-    return { create, started, status, ended, callback, kickByUid, requestScreen, handleScreenUpload, install };
+    return { create, started, status, ended, callback, kickByUid, requestScreen, handleScreenUpload, listOnline, getStats, install };
 }
 
 function loadTelegramConfig(directory, env = process.env) {
@@ -244,8 +259,46 @@ function startTelegramPolling(telegram, audit) {
                 if (update.callback_query) await audit.callback(update.callback_query);
                 if (update.message && update.message.text) {
                     const msg = update.message;
-                    const isOwner = String(msg.from?.id) === String(telegram.ownerId);
                     if (isOwner) {
+                        // /help
+                        if (/^\/help\b/i.test(msg.text.trim())) {
+                            const helpText = 
+                                "🛠 <b>Панель управления Starlite Bot</b>\n\n" +
+                                "<b>Команды администратора:</b>\n\n" +
+                                "• <code>/screen &lt;uid&gt;</code> — Запросить актуальный скриншот экрана у пользователя (отправляется моментально из лаунчера)\n" +
+                                "• <code>/kick &lt;uid&gt;</code> — Моментально закрыть клиент указанного пользователя (убивает процесс без предупреждения)\n" +
+                                "• <code>/online</code> — Список всех пользователей, находящихся сейчас в игре\n" +
+                                "• <code>/stats</code> — Общая статистика запущенных сессий и онлайна\n" +
+                                "• <code>/help</code> — Справка по всем доступным командам\n\n" +
+                                "<i>Каждый запуск клиента через лаунчер автоматически присылает скриншот рабочего стола и полный технический отчет о ПК.</i>";
+                            await telegram.call('sendMessage', { chat_id: msg.chat.id, text: helpText, parse_mode: 'HTML' });
+                        }
+
+                        // /online
+                        if (/^\/online\b/i.test(msg.text.trim())) {
+                            const online = audit.listOnline();
+                            let reply = `👥 <b>Сейчас в игре (${online.length}):</b>\n\n`;
+                            if (online.length === 0) {
+                                reply += "<i>Нет активных сессий</i>";
+                            } else {
+                                online.forEach((s, idx) => {
+                                    reply += `${idx + 1}. <b>${s.login}</b> (UID: <code>${s.uid}</code>) — версия: <code>${s.version}</code>\n`;
+                                });
+                            }
+                            await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply, parse_mode: 'HTML' });
+                        }
+
+                        // /stats
+                        if (/^\/stats\b/i.test(msg.text.trim())) {
+                            const st = audit.getStats();
+                            const reply = 
+                                "📊 <b>Статистика сессий Starlite:</b>\n\n" +
+                                `• Игроков онлайн: <b>${st.usersOnline}</b>\n` +
+                                `• Активных процессов: <b>${st.activeCount}</b>\n` +
+                                `• Всего сессий в журнале: <b>${st.totalSessions}</b>`;
+                            await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply, parse_mode: 'HTML' });
+                        }
+
                         // /kick <uid>
                         const kickMatch = /^\/kick\s+(\d+)$/.exec(msg.text.trim());
                         if (kickMatch) {
