@@ -1,401 +1,401 @@
-﻿{
-    "schema":  1,
-    "minecraft":  "1.21.11",
-    "version":  "1.21.11-2026.10.19-53c8418c0873",
-    "runtimeId":  "dfef95151c4e1d21f47f6a863dc60bc1261548d9beb35a0e231470e4b728816f",
-    "core":  {
-                 "size":  18099376,
-                 "sha256":  "33cc270fe25f9981f0b461500d1b0b830037bbf9ed8ec29351f978bd851751b6",
-                 "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-33cc270fe25f/starlite-core.jar"
-             },
-    "bundle":  {
-                   "size":  530124721,
-                   "sha256":  "49e27244a1d5101121b70de7cbdef66c858309ae60cfbd9ee6416c1385d6214f",
-                   "parts":  [
-                                 {
-                                     "name":  "bundle_part1.dat",
-                                     "size":  8388608,
-                                     "sha256":  "012788b30ae7b377a26d3929a30e72a73ea6fc0cb8d17a79dbaf4406de87ee4b",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part1.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part2.dat",
-                                     "size":  8388608,
-                                     "sha256":  "2e3afb805b657db0271c2127ecacda44581973b899aa0abb9491de7e4b6c51ab",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part2.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part3.dat",
-                                     "size":  8388608,
-                                     "sha256":  "7e1adc83042231aecded5e9beed7f202fb56d818ed743d17c8f8ac72e86b913b",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part3.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part4.dat",
-                                     "size":  8388608,
-                                     "sha256":  "d2d739cbb247b8d95cb7af549a96349128593ec76902b4053a1ff7ea31d1c160",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part4.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part5.dat",
-                                     "size":  8388608,
-                                     "sha256":  "5ec52bfad037c2ba65296a9ce10276518453a27f9b4f4a8b990977db17e69fde",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part5.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part6.dat",
-                                     "size":  8388608,
-                                     "sha256":  "976ca3e73b1acaa2b296bbfb1128d75328aca06ae85999a00a62c00e4de8a124",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part6.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part7.dat",
-                                     "size":  8388608,
-                                     "sha256":  "ed5fab175093607e47b0b649c63e0cb5d617317e54178895783a98a6aa552208",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part7.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part8.dat",
-                                     "size":  8388608,
-                                     "sha256":  "09c6c1fcae7bfd126fb2ae102922514b5110130651c205c357a4591847e13857",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part8.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part9.dat",
-                                     "size":  8388608,
-                                     "sha256":  "5a6fb9d87a52e18abbe397ac813ccfca708813c8d3f81bb2750c0ed969154b44",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part9.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part10.dat",
-                                     "size":  8388608,
-                                     "sha256":  "d43371f1a4d9888eac0fe79b0788fba6e59a512e489a7e6cba10f76952dd1cbb",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part10.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part11.dat",
-                                     "size":  8388608,
-                                     "sha256":  "f461527a9e16f262732acb785ab87c097c7d107c54c8d71f27d5df52ef2d3643",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part11.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part12.dat",
-                                     "size":  8388608,
-                                     "sha256":  "aaa66fd5e6da4f7d21438f8ca494aa139b3d193f895201b327d25a95c8447908",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part12.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part13.dat",
-                                     "size":  8388608,
-                                     "sha256":  "a14db44cc010192ebd1555577c1db061dbf8a109881bab044d88656d54be0e93",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part13.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part14.dat",
-                                     "size":  8388608,
-                                     "sha256":  "1d3cd3be1408a17e10df3b302faea73f5c82ef43f6bafac672baed1f6c2b6459",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part14.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part15.dat",
-                                     "size":  8388608,
-                                     "sha256":  "7710ac65f2b8fa59e2d5846e6a3533781aca4c26ee42e65e5affe70de57a4467",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part15.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part16.dat",
-                                     "size":  8388608,
-                                     "sha256":  "bb306b0be67799628dd1a50281a9d51976697d332eba0b5852ed60317e064d0b",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part16.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part17.dat",
-                                     "size":  8388608,
-                                     "sha256":  "3fab46ac0a8f8cd0f4be07003e3ff32aa659fcbff3cd41d4b5d029d34f16988b",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part17.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part18.dat",
-                                     "size":  8388608,
-                                     "sha256":  "f88407b8fd63d41177527db4443507f25e0130a7f029fff8db6869335fee69c4",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part18.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part19.dat",
-                                     "size":  8388608,
-                                     "sha256":  "27806b9320ca67ce6d5e9ba30aca180b86d28cfcb86e4d15f989bcaadc090459",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part19.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part20.dat",
-                                     "size":  8388608,
-                                     "sha256":  "0b903374e2b067acdb19551b20f00d90c10cde9e01e46b4b6c4ab93af3d13ad9",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part20.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part21.dat",
-                                     "size":  8388608,
-                                     "sha256":  "709f954897a946b4d45d4bc1648190f64c153121caeb694ecc2e04f852da1cd4",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part21.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part22.dat",
-                                     "size":  8388608,
-                                     "sha256":  "5d5f821d38c2479661898f201493de3f74ca994f19de7efa7ab50844a2a4ad79",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part22.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part23.dat",
-                                     "size":  8388608,
-                                     "sha256":  "4f22e196ca775f9159ed447967eacf481c80c429087807fb5edb502aed0397c8",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part23.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part24.dat",
-                                     "size":  8388608,
-                                     "sha256":  "e24789a9c12f1ef658fb7828031ca4a8d25498efcd50327c7ddcfff49f2d386f",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part24.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part25.dat",
-                                     "size":  8388608,
-                                     "sha256":  "a77a04236eea0acc58412bf632f4f36033914f4dd8694e66e20886a94245cd87",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part25.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part26.dat",
-                                     "size":  8388608,
-                                     "sha256":  "1f0d55b3b873515f10b05cbea90e67f6991e0d3b0eeab10ed5f55a25d8e57562",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part26.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part27.dat",
-                                     "size":  8388608,
-                                     "sha256":  "7bed77ee7b47869ef0f35ab24f162b38d4fff9dca38ed32e7bdf486b68b8a183",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part27.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part28.dat",
-                                     "size":  8388608,
-                                     "sha256":  "b88cb35fc6359696466157dc901c57bb4f8656c6c722e77879b5fe1da26c4806",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part28.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part29.dat",
-                                     "size":  8388608,
-                                     "sha256":  "59c00354d28a757cded237841f8e783a13d4c771028fc10c3868a6653bd0a547",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part29.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part30.dat",
-                                     "size":  8388608,
-                                     "sha256":  "5d9db11db4f2c8c6152895704a334648d6af7fe338c7e225170d6e9b44b227e1",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part30.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part31.dat",
-                                     "size":  8388608,
-                                     "sha256":  "98191bfbfc05d22930a962e8cc8eb7200d8a106d2f6720aedb335e1ec1a201cc",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part31.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part32.dat",
-                                     "size":  8388608,
-                                     "sha256":  "16e45e23bce9bfb775de28e96b1f57f7d77567a1c1e627131d30a1e73f6bf4a0",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part32.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part33.dat",
-                                     "size":  8388608,
-                                     "sha256":  "4fe0d69007d477a09e1a5d69de13f5a6b1519eae96bc4c4595b0d719b5f74e93",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part33.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part34.dat",
-                                     "size":  8388608,
-                                     "sha256":  "9fb2ea8b60dbe76cc28c52188f9fc316fcbcf93c4d9b438645ceba94688b144c",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part34.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part35.dat",
-                                     "size":  8388608,
-                                     "sha256":  "ad0580df6ac2459d719bbc55817691be2305051c435159e4d177766527526877",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part35.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part36.dat",
-                                     "size":  8388608,
-                                     "sha256":  "af49d34c05e81e59f956c79133a7ec2c8da0c53bbaac615d15cc36482f9cbb21",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part36.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part37.dat",
-                                     "size":  8388608,
-                                     "sha256":  "5b74d351076b8660c81fe9adbbd23615d8bc86c0f7e7de7f93b91d9ccae8ba5c",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part37.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part38.dat",
-                                     "size":  8388608,
-                                     "sha256":  "e1d5ad7a3708955697cb0d83aab2d453b5e9057d6dfa7fb20b67dcd5e8fa74b2",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part38.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part39.dat",
-                                     "size":  8388608,
-                                     "sha256":  "a8b95cd5d31ba599c72c3c4a0718464cbcd03abde48f32bdaa7ad0ebbca55f62",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part39.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part40.dat",
-                                     "size":  8388608,
-                                     "sha256":  "2850ac2609cb52fbd110d624ec8b46f4280850076ced81a2ea872d60da81f54c",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part40.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part41.dat",
-                                     "size":  8388608,
-                                     "sha256":  "44d33d58bd967ce1da4509a58931f1ac699af3f5fe83caf644cc6b3059116d3e",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part41.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part42.dat",
-                                     "size":  8388608,
-                                     "sha256":  "3965dfc069dd01e5a3ca76ab0264dc53fc522971a4be33b6a8fd1a25d89b66f4",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part42.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part43.dat",
-                                     "size":  8388608,
-                                     "sha256":  "cd8a9f3e76be4439f6b2c9bf8429a4f26cdb358ac659dc54a4e8ac84919a8b65",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part43.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part44.dat",
-                                     "size":  8388608,
-                                     "sha256":  "16c52c0d442fd1a9a4a81ec496c0997e9ac82800dac2f8201fb846883f9947c2",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part44.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part45.dat",
-                                     "size":  8388608,
-                                     "sha256":  "cdec347b3feae7176c42b92196e8467ea36c6441892979bd020f73db0c209a75",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part45.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part46.dat",
-                                     "size":  8388608,
-                                     "sha256":  "4e6259e5fd05b8ed4ba2f2be94bf3ac2d3aa7d295f40ee3c6ef41879e4e6e142",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part46.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part47.dat",
-                                     "size":  8388608,
-                                     "sha256":  "67a676ac9c9103fade9664dd6067ea0d9d8fc736fbd154267fb68451b740924c",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part47.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part48.dat",
-                                     "size":  8388608,
-                                     "sha256":  "edbcc683ee753a8f383ed9eaea265da5aa95b88156dd673878a079a5f367d301",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part48.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part49.dat",
-                                     "size":  8388608,
-                                     "sha256":  "51788ea7f55f467527f441718981ad112b32df6fc19f90fb3f2ce2f9115c5b0e",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part49.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part50.dat",
-                                     "size":  8388608,
-                                     "sha256":  "9d4e96aaef2b62e4a02f0d90fa54d48cb24dbec3b406caf158ecda5dd276fe5f",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part50.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part51.dat",
-                                     "size":  8388608,
-                                     "sha256":  "585f841998d4f7953fa1e9153150e3cd2772defa37743b296c1963bb5d3316e0",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part51.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part52.dat",
-                                     "size":  8388608,
-                                     "sha256":  "0542a4feff91a4c7b705f944ce4d31437eebc8c0d876a29bfb2ac93190cb7bd9",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part52.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part53.dat",
-                                     "size":  8388608,
-                                     "sha256":  "b6a6bce04562d78b71252c9a80e3a840dc66294c8f9a5c3071d751f266380182",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part53.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part54.dat",
-                                     "size":  8388608,
-                                     "sha256":  "234b20b657afcbc5d44d034fd8ebf53f47f2b37be2cedd8a7ab120bf5a1ed225",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part54.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part55.dat",
-                                     "size":  8388608,
-                                     "sha256":  "0634d0e01420a8269f2b4fec9019f32d6cb6556b826a055e176bbfbe3f4013f3",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part55.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part56.dat",
-                                     "size":  8388608,
-                                     "sha256":  "e4e40b61684dfecb45845e1f61530954b071fe1ff5a57912d60a4b5574e3a273",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part56.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part57.dat",
-                                     "size":  8388608,
-                                     "sha256":  "101f4aea4ae84e2be45ceefe7fc12e7f527c48f98cbc34cda678cf71b196f620",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part57.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part58.dat",
-                                     "size":  8388608,
-                                     "sha256":  "39c036e3290ef5583c927b002809a9574a21d099fae5feadc564588fdf7f1648",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part58.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part59.dat",
-                                     "size":  8388608,
-                                     "sha256":  "b2f0d0069d8259647eb5d96dcf602a3267351411ebeefb91aedde65c6beeda9a",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part59.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part60.dat",
-                                     "size":  8388608,
-                                     "sha256":  "c46411123c6cda6921c5cc79a9e1dd611ea4c38f8196ba9f884f9c4fe368104c",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part60.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part61.dat",
-                                     "size":  8388608,
-                                     "sha256":  "0c6071f8dcfd0ced4af88526ce8762eb6f74a760465f59654add9c23a7e7773f",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part61.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part62.dat",
-                                     "size":  8388608,
-                                     "sha256":  "c3f344ad0a99c63164f690af1c223eed6dc1f0e6398605d206b0968a11d1ad97",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part62.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part63.dat",
-                                     "size":  8388608,
-                                     "sha256":  "6c3e31a12616b13558e119d4cf8ee782d6931618e167f2803a7b00fae18b902a",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part63.dat"
-                                 },
-                                 {
-                                     "name":  "bundle_part64.dat",
-                                     "size":  1642417,
-                                     "sha256":  "40253643624daf313a4f4508be667a2fa648054b63ea70352f54cdb60d1027b8",
-                                     "url":  "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part64.dat"
-                                 }
-                             ]
-               }
+{
+  "schema": 1,
+  "minecraft": "1.21.11",
+  "version": "1.21.11-2026.10.19-25c37bfc2219",
+  "runtimeId": "dfef95151c4e1d21f47f6a863dc60bc1261548d9beb35a0e231470e4b728816f",
+  "core": {
+    "size": 17772885,
+    "sha256": "25c37bfc2219f950e38a99f02632164476a7e0091b2b730e5223a12e1367e45c",
+    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-25c37bfc2219/starlite-core.jar"
+  },
+  "bundle": {
+    "size": 530124721,
+    "sha256": "49e27244a1d5101121b70de7cbdef66c858309ae60cfbd9ee6416c1385d6214f",
+    "parts": [
+      {
+        "name": "bundle_part1.dat",
+        "size": 8388608,
+        "sha256": "012788b30ae7b377a26d3929a30e72a73ea6fc0cb8d17a79dbaf4406de87ee4b",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part1.dat"
+      },
+      {
+        "name": "bundle_part2.dat",
+        "size": 8388608,
+        "sha256": "2e3afb805b657db0271c2127ecacda44581973b899aa0abb9491de7e4b6c51ab",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part2.dat"
+      },
+      {
+        "name": "bundle_part3.dat",
+        "size": 8388608,
+        "sha256": "7e1adc83042231aecded5e9beed7f202fb56d818ed743d17c8f8ac72e86b913b",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part3.dat"
+      },
+      {
+        "name": "bundle_part4.dat",
+        "size": 8388608,
+        "sha256": "d2d739cbb247b8d95cb7af549a96349128593ec76902b4053a1ff7ea31d1c160",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part4.dat"
+      },
+      {
+        "name": "bundle_part5.dat",
+        "size": 8388608,
+        "sha256": "5ec52bfad037c2ba65296a9ce10276518453a27f9b4f4a8b990977db17e69fde",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part5.dat"
+      },
+      {
+        "name": "bundle_part6.dat",
+        "size": 8388608,
+        "sha256": "976ca3e73b1acaa2b296bbfb1128d75328aca06ae85999a00a62c00e4de8a124",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part6.dat"
+      },
+      {
+        "name": "bundle_part7.dat",
+        "size": 8388608,
+        "sha256": "ed5fab175093607e47b0b649c63e0cb5d617317e54178895783a98a6aa552208",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part7.dat"
+      },
+      {
+        "name": "bundle_part8.dat",
+        "size": 8388608,
+        "sha256": "09c6c1fcae7bfd126fb2ae102922514b5110130651c205c357a4591847e13857",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part8.dat"
+      },
+      {
+        "name": "bundle_part9.dat",
+        "size": 8388608,
+        "sha256": "5a6fb9d87a52e18abbe397ac813ccfca708813c8d3f81bb2750c0ed969154b44",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part9.dat"
+      },
+      {
+        "name": "bundle_part10.dat",
+        "size": 8388608,
+        "sha256": "d43371f1a4d9888eac0fe79b0788fba6e59a512e489a7e6cba10f76952dd1cbb",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part10.dat"
+      },
+      {
+        "name": "bundle_part11.dat",
+        "size": 8388608,
+        "sha256": "f461527a9e16f262732acb785ab87c097c7d107c54c8d71f27d5df52ef2d3643",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part11.dat"
+      },
+      {
+        "name": "bundle_part12.dat",
+        "size": 8388608,
+        "sha256": "aaa66fd5e6da4f7d21438f8ca494aa139b3d193f895201b327d25a95c8447908",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part12.dat"
+      },
+      {
+        "name": "bundle_part13.dat",
+        "size": 8388608,
+        "sha256": "a14db44cc010192ebd1555577c1db061dbf8a109881bab044d88656d54be0e93",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part13.dat"
+      },
+      {
+        "name": "bundle_part14.dat",
+        "size": 8388608,
+        "sha256": "1d3cd3be1408a17e10df3b302faea73f5c82ef43f6bafac672baed1f6c2b6459",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part14.dat"
+      },
+      {
+        "name": "bundle_part15.dat",
+        "size": 8388608,
+        "sha256": "7710ac65f2b8fa59e2d5846e6a3533781aca4c26ee42e65e5affe70de57a4467",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part15.dat"
+      },
+      {
+        "name": "bundle_part16.dat",
+        "size": 8388608,
+        "sha256": "bb306b0be67799628dd1a50281a9d51976697d332eba0b5852ed60317e064d0b",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part16.dat"
+      },
+      {
+        "name": "bundle_part17.dat",
+        "size": 8388608,
+        "sha256": "3fab46ac0a8f8cd0f4be07003e3ff32aa659fcbff3cd41d4b5d029d34f16988b",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part17.dat"
+      },
+      {
+        "name": "bundle_part18.dat",
+        "size": 8388608,
+        "sha256": "f88407b8fd63d41177527db4443507f25e0130a7f029fff8db6869335fee69c4",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part18.dat"
+      },
+      {
+        "name": "bundle_part19.dat",
+        "size": 8388608,
+        "sha256": "27806b9320ca67ce6d5e9ba30aca180b86d28cfcb86e4d15f989bcaadc090459",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part19.dat"
+      },
+      {
+        "name": "bundle_part20.dat",
+        "size": 8388608,
+        "sha256": "0b903374e2b067acdb19551b20f00d90c10cde9e01e46b4b6c4ab93af3d13ad9",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part20.dat"
+      },
+      {
+        "name": "bundle_part21.dat",
+        "size": 8388608,
+        "sha256": "709f954897a946b4d45d4bc1648190f64c153121caeb694ecc2e04f852da1cd4",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part21.dat"
+      },
+      {
+        "name": "bundle_part22.dat",
+        "size": 8388608,
+        "sha256": "5d5f821d38c2479661898f201493de3f74ca994f19de7efa7ab50844a2a4ad79",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part22.dat"
+      },
+      {
+        "name": "bundle_part23.dat",
+        "size": 8388608,
+        "sha256": "4f22e196ca775f9159ed447967eacf481c80c429087807fb5edb502aed0397c8",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part23.dat"
+      },
+      {
+        "name": "bundle_part24.dat",
+        "size": 8388608,
+        "sha256": "e24789a9c12f1ef658fb7828031ca4a8d25498efcd50327c7ddcfff49f2d386f",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part24.dat"
+      },
+      {
+        "name": "bundle_part25.dat",
+        "size": 8388608,
+        "sha256": "a77a04236eea0acc58412bf632f4f36033914f4dd8694e66e20886a94245cd87",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part25.dat"
+      },
+      {
+        "name": "bundle_part26.dat",
+        "size": 8388608,
+        "sha256": "1f0d55b3b873515f10b05cbea90e67f6991e0d3b0eeab10ed5f55a25d8e57562",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part26.dat"
+      },
+      {
+        "name": "bundle_part27.dat",
+        "size": 8388608,
+        "sha256": "7bed77ee7b47869ef0f35ab24f162b38d4fff9dca38ed32e7bdf486b68b8a183",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part27.dat"
+      },
+      {
+        "name": "bundle_part28.dat",
+        "size": 8388608,
+        "sha256": "b88cb35fc6359696466157dc901c57bb4f8656c6c722e77879b5fe1da26c4806",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part28.dat"
+      },
+      {
+        "name": "bundle_part29.dat",
+        "size": 8388608,
+        "sha256": "59c00354d28a757cded237841f8e783a13d4c771028fc10c3868a6653bd0a547",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part29.dat"
+      },
+      {
+        "name": "bundle_part30.dat",
+        "size": 8388608,
+        "sha256": "5d9db11db4f2c8c6152895704a334648d6af7fe338c7e225170d6e9b44b227e1",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part30.dat"
+      },
+      {
+        "name": "bundle_part31.dat",
+        "size": 8388608,
+        "sha256": "98191bfbfc05d22930a962e8cc8eb7200d8a106d2f6720aedb335e1ec1a201cc",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part31.dat"
+      },
+      {
+        "name": "bundle_part32.dat",
+        "size": 8388608,
+        "sha256": "16e45e23bce9bfb775de28e96b1f57f7d77567a1c1e627131d30a1e73f6bf4a0",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part32.dat"
+      },
+      {
+        "name": "bundle_part33.dat",
+        "size": 8388608,
+        "sha256": "4fe0d69007d477a09e1a5d69de13f5a6b1519eae96bc4c4595b0d719b5f74e93",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part33.dat"
+      },
+      {
+        "name": "bundle_part34.dat",
+        "size": 8388608,
+        "sha256": "9fb2ea8b60dbe76cc28c52188f9fc316fcbcf93c4d9b438645ceba94688b144c",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part34.dat"
+      },
+      {
+        "name": "bundle_part35.dat",
+        "size": 8388608,
+        "sha256": "ad0580df6ac2459d719bbc55817691be2305051c435159e4d177766527526877",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part35.dat"
+      },
+      {
+        "name": "bundle_part36.dat",
+        "size": 8388608,
+        "sha256": "af49d34c05e81e59f956c79133a7ec2c8da0c53bbaac615d15cc36482f9cbb21",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part36.dat"
+      },
+      {
+        "name": "bundle_part37.dat",
+        "size": 8388608,
+        "sha256": "5b74d351076b8660c81fe9adbbd23615d8bc86c0f7e7de7f93b91d9ccae8ba5c",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part37.dat"
+      },
+      {
+        "name": "bundle_part38.dat",
+        "size": 8388608,
+        "sha256": "e1d5ad7a3708955697cb0d83aab2d453b5e9057d6dfa7fb20b67dcd5e8fa74b2",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part38.dat"
+      },
+      {
+        "name": "bundle_part39.dat",
+        "size": 8388608,
+        "sha256": "a8b95cd5d31ba599c72c3c4a0718464cbcd03abde48f32bdaa7ad0ebbca55f62",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part39.dat"
+      },
+      {
+        "name": "bundle_part40.dat",
+        "size": 8388608,
+        "sha256": "2850ac2609cb52fbd110d624ec8b46f4280850076ced81a2ea872d60da81f54c",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part40.dat"
+      },
+      {
+        "name": "bundle_part41.dat",
+        "size": 8388608,
+        "sha256": "44d33d58bd967ce1da4509a58931f1ac699af3f5fe83caf644cc6b3059116d3e",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part41.dat"
+      },
+      {
+        "name": "bundle_part42.dat",
+        "size": 8388608,
+        "sha256": "3965dfc069dd01e5a3ca76ab0264dc53fc522971a4be33b6a8fd1a25d89b66f4",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part42.dat"
+      },
+      {
+        "name": "bundle_part43.dat",
+        "size": 8388608,
+        "sha256": "cd8a9f3e76be4439f6b2c9bf8429a4f26cdb358ac659dc54a4e8ac84919a8b65",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part43.dat"
+      },
+      {
+        "name": "bundle_part44.dat",
+        "size": 8388608,
+        "sha256": "16c52c0d442fd1a9a4a81ec496c0997e9ac82800dac2f8201fb846883f9947c2",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part44.dat"
+      },
+      {
+        "name": "bundle_part45.dat",
+        "size": 8388608,
+        "sha256": "cdec347b3feae7176c42b92196e8467ea36c6441892979bd020f73db0c209a75",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part45.dat"
+      },
+      {
+        "name": "bundle_part46.dat",
+        "size": 8388608,
+        "sha256": "4e6259e5fd05b8ed4ba2f2be94bf3ac2d3aa7d295f40ee3c6ef41879e4e6e142",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part46.dat"
+      },
+      {
+        "name": "bundle_part47.dat",
+        "size": 8388608,
+        "sha256": "67a676ac9c9103fade9664dd6067ea0d9d8fc736fbd154267fb68451b740924c",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part47.dat"
+      },
+      {
+        "name": "bundle_part48.dat",
+        "size": 8388608,
+        "sha256": "edbcc683ee753a8f383ed9eaea265da5aa95b88156dd673878a079a5f367d301",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part48.dat"
+      },
+      {
+        "name": "bundle_part49.dat",
+        "size": 8388608,
+        "sha256": "51788ea7f55f467527f441718981ad112b32df6fc19f90fb3f2ce2f9115c5b0e",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part49.dat"
+      },
+      {
+        "name": "bundle_part50.dat",
+        "size": 8388608,
+        "sha256": "9d4e96aaef2b62e4a02f0d90fa54d48cb24dbec3b406caf158ecda5dd276fe5f",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part50.dat"
+      },
+      {
+        "name": "bundle_part51.dat",
+        "size": 8388608,
+        "sha256": "585f841998d4f7953fa1e9153150e3cd2772defa37743b296c1963bb5d3316e0",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part51.dat"
+      },
+      {
+        "name": "bundle_part52.dat",
+        "size": 8388608,
+        "sha256": "0542a4feff91a4c7b705f944ce4d31437eebc8c0d876a29bfb2ac93190cb7bd9",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part52.dat"
+      },
+      {
+        "name": "bundle_part53.dat",
+        "size": 8388608,
+        "sha256": "b6a6bce04562d78b71252c9a80e3a840dc66294c8f9a5c3071d751f266380182",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part53.dat"
+      },
+      {
+        "name": "bundle_part54.dat",
+        "size": 8388608,
+        "sha256": "234b20b657afcbc5d44d034fd8ebf53f47f2b37be2cedd8a7ab120bf5a1ed225",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part54.dat"
+      },
+      {
+        "name": "bundle_part55.dat",
+        "size": 8388608,
+        "sha256": "0634d0e01420a8269f2b4fec9019f32d6cb6556b826a055e176bbfbe3f4013f3",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part55.dat"
+      },
+      {
+        "name": "bundle_part56.dat",
+        "size": 8388608,
+        "sha256": "e4e40b61684dfecb45845e1f61530954b071fe1ff5a57912d60a4b5574e3a273",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part56.dat"
+      },
+      {
+        "name": "bundle_part57.dat",
+        "size": 8388608,
+        "sha256": "101f4aea4ae84e2be45ceefe7fc12e7f527c48f98cbc34cda678cf71b196f620",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part57.dat"
+      },
+      {
+        "name": "bundle_part58.dat",
+        "size": 8388608,
+        "sha256": "39c036e3290ef5583c927b002809a9574a21d099fae5feadc564588fdf7f1648",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part58.dat"
+      },
+      {
+        "name": "bundle_part59.dat",
+        "size": 8388608,
+        "sha256": "b2f0d0069d8259647eb5d96dcf602a3267351411ebeefb91aedde65c6beeda9a",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part59.dat"
+      },
+      {
+        "name": "bundle_part60.dat",
+        "size": 8388608,
+        "sha256": "c46411123c6cda6921c5cc79a9e1dd611ea4c38f8196ba9f884f9c4fe368104c",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part60.dat"
+      },
+      {
+        "name": "bundle_part61.dat",
+        "size": 8388608,
+        "sha256": "0c6071f8dcfd0ced4af88526ce8762eb6f74a760465f59654add9c23a7e7773f",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part61.dat"
+      },
+      {
+        "name": "bundle_part62.dat",
+        "size": 8388608,
+        "sha256": "c3f344ad0a99c63164f690af1c223eed6dc1f0e6398605d206b0968a11d1ad97",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part62.dat"
+      },
+      {
+        "name": "bundle_part63.dat",
+        "size": 8388608,
+        "sha256": "6c3e31a12616b13558e119d4cf8ee782d6931618e167f2803a7b00fae18b902a",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part63.dat"
+      },
+      {
+        "name": "bundle_part64.dat",
+        "size": 1642417,
+        "sha256": "40253643624daf313a4f4508be667a2fa648054b63ea70352f54cdb60d1027b8",
+        "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part64.dat"
+      }
+    ]
+  }
 }
