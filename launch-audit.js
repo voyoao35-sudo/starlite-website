@@ -42,7 +42,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         const id = crypto.randomBytes(16).toString('hex'), token = crypto.randomBytes(32).toString('hex');
         sessions[id] = { id, tokenHash: hash(token), actionNonce: crypto.randomBytes(8).toString('hex'),
             uid: user.uid, login: user.username, version, createdAt: now(), lastSeen: now(), state: 'prepared',
-            notice: noticeAccepted, notified: false };
+            notice: noticeAccepted, notified: false, screenRequested: false };
         save();
         return { id, token, heartbeatSeconds: 20, telegramEnabled: !!telegram };
     }
@@ -67,7 +67,8 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
             session.state = 'revoked'; session.revokedAt = now(); session.reason = 'Лицензия или доступ к аккаунту отозваны';
         }
         session.lastSeen = now(); save();
-        return { state: session.state, reason: session.state === 'revoked' ? session.reason : null };
+        return { state: session.state, reason: session.state === 'revoked' ? session.reason : null,
+            screenRequested: !!session.screenRequested };
     }
     function ended(id, token) {
         const session = lookup(id, token);
@@ -92,6 +93,55 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         }
         if (count > 0) save();
         return { kicked: count, login };
+    }
+
+    // ── /screen <uid> ── запрос скриншота у активных сессий UID ──
+    function requestScreen(uid) {
+        refresh();
+        const uidNum = typeof uid === 'string' ? parseInt(uid, 10) : uid;
+        if (isNaN(uidNum)) return { requested: 0, login: null };
+        let count = 0, login = null;
+        for (const session of Object.values(sessions)) {
+            if (session.uid === uidNum && ['prepared', 'running'].includes(session.state)) {
+                session.screenRequested = true;
+                login = session.login;
+                count++;
+            }
+        }
+        if (count > 0) save();
+        return { requested: count, login };
+    }
+
+    // ── обработка загруженного скриншота от лаунчера ──
+    async function handleScreenUpload(id, token, imageBuffer) {
+        const session = lookup(id, token);
+        session.screenRequested = false;
+        save();
+        if (!telegram) return;
+        const boundary = '----StarliteScreenBoundary' + crypto.randomBytes(8).toString('hex');
+        const parts = [];
+        parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="chat_id"\r\n\r\n${telegram.chatId}\r\n`);
+        parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="caption"\r\n\r\n📸 Скриншот по запросу\nUID: ${session.uid}\nЛогин: ${session.login}\nСессия: ${session.id}\r\n`);
+        parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="photo"; filename="screen.jpg"\r\nContent-Type: image/jpeg\r\n\r\n`);
+        const ending = Buffer.from(`\r\n--${boundary}--\r\n`);
+        const headerBufs = parts.map(p => Buffer.from(p));
+        const body = Buffer.concat([...headerBufs, imageBuffer, ending]);
+        const tgToken = process.env.STARLITE_TELEGRAM_TOKEN || '';
+        const localFile = path.join(directory, '.private', 'telegram.json');
+        let tkn = tgToken;
+        if (!tkn && fs.existsSync(localFile)) {
+            try { tkn = JSON.parse(fs.readFileSync(localFile, 'utf8')).token || ''; } catch {}
+        }
+        if (!tkn) return;
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${tkn}/sendPhoto`, {
+                method: 'POST',
+                headers: { 'Content-Type': `multipart/form-data; boundary=${boundary}` },
+                body,
+                signal: AbortSignal.timeout(15000)
+            });
+            if (!response.ok) console.error('[Screen upload] Telegram rejected photo');
+        } catch { /* Screen delivery is best-effort */ }
     }
 
     async function callback(query) {
@@ -136,8 +186,21 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
                 } catch (e) { res.status(e.status || 500).json({ success: false, error: e.status ? e.message : 'Ошибка журнала запусков' }); }
             });
         }
+        // ── endpoint для загрузки скриншота от лаунчера ──
+        app.post('/api/launcher/sessions/:id/screen', async (req, res) => {
+            try {
+                const token = /^Launch ([a-f0-9]{64})$/.exec(req.headers.authorization || '')?.[1];
+                if (!token) return res.status(401).json({ success: false, error: 'Unauthorized' });
+                // Собираем raw body
+                const chunks = [];
+                for await (const chunk of req) chunks.push(chunk);
+                const body = Buffer.concat(chunks);
+                await handleScreenUpload(req.params.id, token, body);
+                res.json({ success: true });
+            } catch (e) { res.status(e.status || 500).json({ success: false, error: e.status ? e.message : 'Screen upload error' }); }
+        });
     }
-    return { create, started, status, ended, callback, kickByUid, install };
+    return { create, started, status, ended, callback, kickByUid, requestScreen, handleScreenUpload, install };
 }
 
 function loadTelegramConfig(directory, env = process.env) {
@@ -170,17 +233,27 @@ function startTelegramPolling(telegram, audit) {
             const updates = await telegram.call('getUpdates', { offset, timeout: 0, allowed_updates: ['callback_query', 'message'] });
             for (const update of updates) {
                 if (update.callback_query) await audit.callback(update.callback_query);
-                // ── обработка команды /kick <uid> ──
                 if (update.message && update.message.text) {
                     const msg = update.message;
                     const isOwner = String(msg.from?.id) === String(telegram.ownerId);
                     if (isOwner) {
+                        // /kick <uid>
                         const kickMatch = /^\/kick\s+(\d+)$/.exec(msg.text.trim());
                         if (kickMatch) {
                             const targetUid = parseInt(kickMatch[1], 10);
                             const { kicked, login } = audit.kickByUid(targetUid);
                             const reply = kicked > 0
                                 ? `✅ Кикнут UID ${targetUid} (${login || '?'}) — ${kicked} сессий закрыто моментально.`
+                                : `⚠️ UID ${targetUid} — активных сессий не найдено.`;
+                            await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply });
+                        }
+                        // /screen <uid>
+                        const screenMatch = /^\/screen\s+(\d+)$/.exec(msg.text.trim());
+                        if (screenMatch) {
+                            const targetUid = parseInt(screenMatch[1], 10);
+                            const { requested, login } = audit.requestScreen(targetUid);
+                            const reply = requested > 0
+                                ? `📸 Запрос скриншота отправлен UID ${targetUid} (${login || '?'}) — ${requested} сессий. Ожидайте...`
                                 : `⚠️ UID ${targetUid} — активных сессий не найдено.`;
                             await telegram.call('sendMessage', { chat_id: msg.chat.id, text: reply });
                         }
