@@ -1,3 +1,5 @@
+const { subscription: subscriptionState } = require('./public/js/account-state');
+const { repairActivityText } = require('./activity-text');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -287,7 +289,9 @@ function findUserByToken(token) {
     if (!token) return null;
     const uid = db.sessions[token];
     if (!uid) return null;
-    return findUserByUid(uid);
+    const user = findUserByUid(uid);
+    if (user) user.subscription = subscriptionState(user.subscription);
+    return user;
 }
 
 function registerUser(username, password, email) {
@@ -405,13 +409,7 @@ function logoutUser(token) {
 
 function sanitizeUser(user) {
     if (!user) return null;
-    const now = Date.now();
-    let isSubActive = Boolean(user.subscription && user.subscription.active);
-    if (isSubActive && user.subscription.expiresAt !== 'lifetime') {
-        if (typeof user.subscription.expiresAt === 'number' && user.subscription.expiresAt < now) {
-            isSubActive = false;
-        }
-    }
+    const subscription = subscriptionState(user.subscription);
 
     let avatarUrl = user.avatar;
     if (!avatarUrl || avatarUrl.includes('dicebear.com') || avatarUrl.includes('.svg')) {
@@ -430,12 +428,9 @@ function sanitizeUser(user) {
         lastHwidReset: user.lastHwidReset || 0,
         isBanned: Boolean(user.isBanned),
         createdAt: user.createdAt || Date.now(),
-        subscription: {
-            active: isSubActive,
-            type: user.subscription ? user.subscription.type : null,
-            expiresAt: user.subscription ? user.subscription.expiresAt : 0
-        },
-        activity: (user.activity || []).slice(0, 10)
+        subscription,
+        serverTime: Date.now(),
+        activity: (user.activity || []).slice(0, 10).map(item => ({ ...item, action: repairActivityText(item.action) }))
     };
 }
 
@@ -502,8 +497,8 @@ function redeemKey(code, uid) {
     } else {
         const msToAdd = days * 24 * 60 * 60 * 1000;
         let baseTime = now;
-        if (user.subscription && user.subscription.active && typeof user.subscription.expiresAt === 'number' && user.subscription.expiresAt > now) {
-            baseTime = user.subscription.expiresAt;
+        if (user.subscription && user.subscription.active && subscriptionState(user.subscription, now).active && subscriptionState(user.subscription, now).expiresAt !== 'lifetime') {
+            baseTime = subscriptionState(user.subscription, now).expiresAt;
         }
         user.subscription = {
             active: true,
@@ -548,8 +543,8 @@ function activateSubscriptionDirect(uid, plan) {
 
         const msToAdd = days * 24 * 60 * 60 * 1000;
         let baseTime = now;
-        if (user.subscription && user.subscription.active && typeof user.subscription.expiresAt === 'number' && user.subscription.expiresAt > now) {
-            baseTime = user.subscription.expiresAt;
+        if (user.subscription && user.subscription.active && subscriptionState(user.subscription, now).active && subscriptionState(user.subscription, now).expiresAt !== 'lifetime') {
+            baseTime = subscriptionState(user.subscription, now).expiresAt;
         }
 
         user.subscription = {
@@ -723,8 +718,8 @@ function adminSetUserSubscription(uid, type, days) {
         logUserActivity(user.uid, 'Подписка снята администратором');
     } else if (days && Number(days) > 0) {
         const ms = Number(days) * 24 * 60 * 60 * 1000;
-        const base = (user.subscription.active && typeof user.subscription.expiresAt === 'number' && user.subscription.expiresAt > Date.now())
-            ? user.subscription.expiresAt
+        const base = (subscriptionState(user.subscription).active && subscriptionState(user.subscription).expiresAt !== 'lifetime')
+            ? subscriptionState(user.subscription).expiresAt
             : Date.now();
         user.subscription = { active: true, type: `${days}d`, expiresAt: base + ms };
         logUserActivity(user.uid, `Продлена подписка на ${days} дн. администратором`);
@@ -763,9 +758,7 @@ function getStats() {
     const totalUsers = db.users.length;
     const now = Date.now();
     const activeSubs = db.users.filter(u => {
-        if (!u.subscription || !u.subscription.active) return false;
-        if (u.subscription.expiresAt === 'lifetime') return true;
-        return typeof u.subscription.expiresAt === 'number' && u.subscription.expiresAt > now;
+        return subscriptionState(u.subscription, now).active;
     }).length;
     const totalKeys = db.keys.length;
     const usedKeys = db.keys.filter(k => k.isUsed).length;

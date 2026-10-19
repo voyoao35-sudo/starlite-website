@@ -2,6 +2,11 @@
 let currentUser = null;
 let currentAuthMode = 'login';
 let pendingPlan = null;
+let accountClockOffset = 0;
+function accountNow() { return Date.now() + accountClockOffset; }
+function escapeActivityText(value) {
+    return String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
 
 // Checkout state
 let currentCheckoutPlan = 'lifetime';
@@ -26,6 +31,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Auto-refresh stats every 30s
     setInterval(loadPublicStats, 30000);
+    setInterval(() => { if (currentUser) renderSubscriptionCard(); }, 1000);
+    setInterval(refreshAccountState, 60000);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') refreshAccountState();
+    });
 });
 
 // ─── TOAST NOTIFICATIONS ─────────────────────────────────────────────────────
@@ -69,6 +79,7 @@ async function checkAuth() {
     try {
         if (window.api.token) {
             currentUser = await window.api.getMe();
+            if (Number.isFinite(currentUser.serverTime)) accountClockOffset = currentUser.serverTime - Date.now();
         }
     } catch (e) {
         currentUser = null;
@@ -295,12 +306,20 @@ function renderCabinetData() {
         btnAdmin.classList.add('hidden');
     }
 
-    // Subscription card
+    renderSubscriptionCard();
+
+    // Activity feed
+    renderActivityFeed();
+    lucide.createIcons();
+}
+
+function renderSubscriptionCard() {
+    if (!currentUser || !document.getElementById('cab-sub-type')) return;
     const subTypeEl = document.getElementById('cab-sub-type');
     const subExpiryEl = document.getElementById('cab-sub-expiry');
     const subRemainingEl = document.getElementById('cab-sub-remaining');
 
-    const sub = currentUser.subscription;
+    const sub = AccountState.subscription(currentUser.subscription, accountNow());
     if (sub && sub.active) {
         if (sub.expiresAt === 'lifetime') {
             subTypeEl.textContent = 'Навсегда (Lifetime)';
@@ -313,7 +332,7 @@ function renderCabinetData() {
             const expY = expDate.getFullYear();
             subExpiryEl.textContent = `${expD}.${expM}.${expY}`;
 
-            const diffDays = Math.max(0, Math.ceil((sub.expiresAt - Date.now()) / (1000 * 60 * 60 * 24)));
+            const diffDays = Math.max(0, Math.ceil((sub.expiresAt - accountNow()) / (1000 * 60 * 60 * 24)));
             subRemainingEl.textContent = `${diffDays} дн.`;
             subTypeEl.textContent = sub.type === '180d' ? '180 Дней' : (sub.type === '30d' ? '30 Дней' : sub.type);
         }
@@ -323,9 +342,15 @@ function renderCabinetData() {
         subRemainingEl.textContent = '—';
     }
 
-    // Activity feed
-    renderActivityFeed();
-    lucide.createIcons();
+}
+
+async function refreshAccountState() {
+    if (!currentUser || !window.api.token) return;
+    try {
+        currentUser = await window.api.getMe();
+        if (Number.isFinite(currentUser.serverTime)) accountClockOffset = currentUser.serverTime - Date.now();
+        renderSubscriptionCard();
+    } catch (_) { /* A temporary network failure does not reset the saved expiry. */ }
 }
 
 function renderActivityFeed() {
@@ -349,7 +374,7 @@ function renderActivityFeed() {
 
     list.innerHTML = activities.map(item => `
         <div class="flex items-center justify-between py-1.5 border-b border-white/5">
-            <span class="text-white">${item.action}</span>
+            <span class="text-white">${escapeActivityText(item.action)}</span>
             <span class="text-slate-500">${formatDateTime(item.timestamp)}</span>
         </div>
     `).join('');
@@ -479,7 +504,7 @@ function handleDownloadClient() {
         return;
     }
 
-    const hasSub = (currentUser.subscription && currentUser.subscription.active) || currentUser.role === 'admin' || currentUser.role === 'owner';
+    const hasSub = AccountState.subscription(currentUser.subscription, accountNow()).active || currentUser.role === 'admin' || currentUser.role === 'owner';
     if (!hasSub) {
         showToast('У вас нет активной подписки! Оформите подписку для загрузки лаунчера.', 'error');
         handleOpenPricing();
@@ -712,7 +737,7 @@ function renderAdminUsers(users) {
                 </select>
             </td>
             <td class="py-2.5">
-                ${u.subscription && u.subscription.active ? '<span class="text-[#10b981]">Активна (' + (u.subscription.type || 'саб') + ')</span>' : '<span class="text-slate-500">Нет</span>'}
+                ${u.subscription && u.subscription.active ? '<span class="text-[#10b981]">Активна (' + (u.subscription.expiresAt === 'lifetime' ? '∞' : AccountState.subscription(u.subscription, accountNow()).remainingDays + ' дн.') + ')</span>' : '<span class="text-slate-500">Нет</span>'}
             </td>
             <td class="py-2.5 text-slate-400 truncate max-w-[80px]">${u.hwid ? 'Привязан' : '—'}</td>
             <td class="py-2.5 text-right space-x-2">
