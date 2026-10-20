@@ -129,6 +129,7 @@ async function initMongo() {
         return;
     }
     if (!MongoClient) {
+        if (REQUIRE_MONGO) throw new Error('MongoDB driver is required for migration');
         console.log('[Database] mongodb package not loaded. Using local storage.');
         return;
     }
@@ -142,7 +143,6 @@ async function initMongo() {
         await mongoClient.connect();
         mongoDb = mongoClient.db('starlite');
         mongoCollection = mongoDb.collection('state');
-        isMongoConnected = true;
         console.log('[Database] Connected to MongoDB Atlas successfully!');
 
         // Check for existing remote database state
@@ -160,13 +160,16 @@ async function initMongo() {
             // Restore avatars to disk if present
             restoreAvatarsToDisk();
             saveDbLocal();
+            isMongoConnected = true;
         } else {
             if (REQUIRE_MONGO) throw new Error('Existing database state is required; refusing to seed');
             console.log('[Database] Remote MongoDB is empty. Seeding initial data from local database.json...');
+            isMongoConnected = true;
             await syncToMongoNow();
         }
     } catch (err) {
         isMongoConnected = false;
+        if (mongoClient) await mongoClient.close().catch(() => {});
         if (REQUIRE_MONGO) throw new Error('Existing database unavailable; migration did not change remote state');
         console.error('[Database] MongoDB connection failed:', err.message);
         console.log('[Database] Falling back to local JSON database storage.');

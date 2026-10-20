@@ -731,7 +731,11 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, async () => {
+async function start() {
+    // Do not expose authentication or downloads against uninitialized state.
+    if (db.initMongo) await db.initMongo();
+    launchAuditReady = true;
+    const server = app.listen(PORT, () => {
     console.log('=============================================');
     console.log(`Starlite Client Web Server running!`);
     console.log(`Local URL: http://localhost:${PORT}`);
@@ -743,10 +747,15 @@ app.listen(PORT, async () => {
         downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
     }
 
-    // Initialize MongoDB Atlas connection if MONGODB_URI is provided
-    if (db.initMongo) {
-        await db.initMongo();
-    }
-    launchAuditReady = true;
     launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
-});
+    });
+    return server;
+}
+
+if (require.main === module) {
+    start().catch(() => {
+        console.error('[Startup] Required database unavailable; server was not started.');
+        process.exitCode = 1;
+    });
+}
+module.exports = { app, start };
