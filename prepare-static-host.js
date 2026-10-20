@@ -18,7 +18,7 @@ for (const channel of ['', '1.21.11/']) {
     const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', relative), 'utf8'));
     fs.mkdirSync(path.dirname(path.join(output, relative)), { recursive: true });
     fs.writeFileSync(path.join(output, relative), JSON.stringify(manifest));
-    rules.push(`/download/${channel}manifest /${relative} 200!`);
+    rules.push(`/download/${channel}manifest https://starlite-production.up.railway.app/download/${channel}manifest 200!`);
     for (const [kind, key] of [['core', 'core'], ['assets', 'assets'], ['java21', 'java']]) {
         if (!manifest[key]) continue;
         const url = delivery.sources(manifest[key])[0];
