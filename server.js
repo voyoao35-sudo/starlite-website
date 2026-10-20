@@ -766,6 +766,11 @@ async function start() {
     }
 
     launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
+    if (auditTelegram) {
+        auditTelegram.call('getMe', {}).then(bot => {
+            console.log('[Telegram] Launch notifications connected: @' + bot.username);
+        }).catch(() => console.error('[Telegram] Bot verification unavailable; game launches are unaffected.'));
+    }
     });
     return server;
 }

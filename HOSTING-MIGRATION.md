@@ -2,7 +2,9 @@
 
 Status: Railway backend deployed at https://starlite-production.up.railway.app without a card, using the existing database (33 users and 6 keys loaded). Northflank was rejected because even its Sandbox requires card verification. Railway's ongoing $1 monthly allowance must be checked against actual server usage before describing it as a permanent hosting solution.
 
-Regional acceptance is still pending: Railway's default domain timed out during TLS handshakes from both tested Russian networks, while both Ukrainian probes returned 200. Do not promote the Railway-only launcher to users yet. Netlify Free onboarding is in progress for a separate public website/API proxy address; it must pass the same regional tests before switching the launcher.
+Public website/API address: https://starlite-client.netlify.app. Netlify was published publicly without a card. Its `/healthz` API proxy returned 200 from both tested Russian networks and both Ukrainian networks. Railway's default domain timed out from the Russian probes, so the launcher uses Netlify. These limited regional tests do not guarantee every ISP.
+
+The user authorized saving the existing bot token/chat ID on Railway. All three variables were entered but remain staged until their deployment is applied. Bot code is committed with notifications-only mode; remote commands and screenshot/PC-report collection are disabled. The new launcher asks for explicit optional consent before sending the minimal launch journal. Its separate candidate release is `launcher-2026.10.20-netlify-bot` (SHA256 `5d446fef1dd6873b5c633873d9c51e8001e8cbbcf5d6da57f694860f3337dc8b`). Update `STARLITE_LAUNCHER_URL` to that release after tests. Browser access was disabled in Work settings before applying these pending changes; user has been asked to re-enable it. Do not claim bot deployment or end-to-end existing-account sign-in verified yet.
 
 ## Runtime configuration
 
