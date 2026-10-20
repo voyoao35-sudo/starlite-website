@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "version": "2026.10.20-23c9eab2ccdd",
+  "version": "2026.10.20-82c0d572a547",
   "runtimeId": "cf0095babcd8f08cf82746836f2f05a4dacb2e608c7a25c121ea5f7e8e73c937",
   "core": {
-    "sha256": "23c9eab2ccddc3912dcdaadbdc99ca732fa14c6b876d588c4c0c478a8040d3d9",
-    "size": 33453166,
-    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-2026.10.20-23c9eab2ccdd/starlite-core.jar"
+    "sha256": "82c0d572a547c0ba5e9771849c7e4f30051032972aed5aacac3b89ea383aead5",
+    "size": 33578889,
+    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-2026.10.20-82c0d572a547/starlite-core.jar"
   },
   "bundle": {
     "sha256": "3df02457ba0aeadca04e6020aa8498aca97c9fbbf2205dcfc80df6604fa40e78",

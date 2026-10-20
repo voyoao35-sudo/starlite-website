@@ -18,7 +18,8 @@ for (const channel of ['', '1.21.11/']) {
     const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', relative), 'utf8'));
     fs.mkdirSync(path.dirname(path.join(output, relative)), { recursive: true });
     fs.writeFileSync(path.join(output, relative), JSON.stringify(manifest));
-    rules.push(`/download/${channel}manifest https://starlite-production.up.railway.app/download/${channel}manifest 200!`);
+    // Release discovery stays available independently of backend build outages.
+    rules.push(`/download/${channel}manifest /${relative} 200!`);
     for (const [kind, key] of [['core', 'core'], ['assets', 'assets'], ['java21', 'java']]) {
         if (!manifest[key]) continue;
         const url = delivery.sources(manifest[key])[0];
@@ -28,4 +29,9 @@ for (const channel of ['', '1.21.11/']) {
 // Archive downloads must bypass the website host. Unmapped routes must not proxy archives.
 rules.push('/* /index.html 200');
 fs.writeFileSync(path.join(output, '_redirects'), rules.join('\n') + '\n');
+fs.writeFileSync(path.join(output, '_headers'), [
+    '/download/*', '  Cache-Control: no-store',
+    '/downloads/*/release.json', '  Cache-Control: no-store',
+    '/downloads/release.json', '  Cache-Control: no-store', ''
+].join('\n'));
 console.log('Static host prepared: public UI and manifests only; no EXEs or game archives.');
