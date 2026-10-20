@@ -9,8 +9,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const externalDownloads = process.env.STARLITE_DOWNLOAD_MODE === 'external';
 const delivery = require('./download-delivery');
-app.get('/healthz', (req, res) => res.status(db.isReady() ? 200 : 503).json({ ready: db.isReady() }));
-app.use('/api', (req, res, next) => db.isReady() ? next() : res.status(503).json({error: 'Database not ready'}));
+app.get('/healthz', (req, res) => res.set('Cache-Control', 'no-store').status(db.isReady() ? 200 : 503).json({ ready: db.isReady() }));
+app.use('/api', (req, res, next) => {
+    res.set('Cache-Control', 'private, no-store');
+    res.vary('Authorization');
+    return db.isReady() ? next() : res.status(503).json({ error: 'Database not ready' });
+});
 
 // FreeKassa Config (can be configured via environment variables or admin)
 const FREEKASSA_SHOP_ID = process.env.FREEKASSA_SHOP_ID || '35912';
