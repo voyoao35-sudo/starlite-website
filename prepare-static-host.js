@@ -7,7 +7,12 @@ fs.mkdirSync(output, { recursive: true });
 for (const name of ['index.html', 'favicon.ico', 'favicon.png', 'css', 'js', 'assets']) {
     fs.cpSync(path.join(__dirname, 'public', name), path.join(output, name), { recursive: true });
 }
-const rules = [];
+// Keep proxy rules and the SPA fallback in one file so the fallback cannot shadow the API.
+const rules = [
+    '/api/* https://starlite-production.up.railway.app/api/:splat 200!',
+    '/healthz https://starlite-production.up.railway.app/healthz 200!',
+    '/avatars/* https://starlite-production.up.railway.app/avatars/:splat 200!'
+];
 for (const channel of ['', '1.21.11/']) {
     const relative = 'downloads/' + channel + 'release.json';
     const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', relative), 'utf8'));
