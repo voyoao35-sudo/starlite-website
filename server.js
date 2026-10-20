@@ -154,6 +154,19 @@ function authMiddleware(req, res, next) {
 }
 
 // Middleware: Admin Only
+app.get('/api/launcher/download', authMiddleware, (req, res) => {
+    const user = req.user;
+    if (!(user.subscription && user.subscription.active) && !['admin', 'owner'].includes(user.role)) {
+        return res.status(403).json({ success: false, error: 'Требуется активная подписка' });
+    }
+    try {
+        res.set('Cache-Control', 'no-store');
+        return res.json({ success: true, url: delivery.launcherUrl(process.env.STARLITE_LAUNCHER_URL) });
+    } catch {
+        return res.status(503).json({ success: false, error: 'Публикация лаунчера ещё не завершена' });
+    }
+});
+
 function adminMiddleware(req, res, next) {
     if (!req.user || req.user.role !== 'admin') {
         return res.status(403).json({ success: false, error: 'Доступ разрешен только администраторам' });

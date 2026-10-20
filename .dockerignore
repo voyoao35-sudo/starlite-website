@@ -4,6 +4,7 @@
 .env.*
 data/launch-audit
 node_modules
+static-host
 *.log
 current_url.txt
 permanent_url.txt

@@ -497,7 +497,7 @@ function showPricingForExtend() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
-function handleDownloadClient() {
+async function handleDownloadClient() {
     if (!currentUser) {
         showToast('Для скачивания лаунчера необходимо войти в аккаунт!', 'warning');
         openAuthModal('login');
@@ -511,9 +511,15 @@ function handleDownloadClient() {
         return;
     }
 
-    showToast('Скачивание Starlite.exe запущено...', 'success');
-    const token = window.api ? window.api.token : (localStorage.getItem('starlite_token') || '');
-    window.location.href = '/download/launcher?token=' + encodeURIComponent(token);
+    try {
+        const result = await window.api.request('/launcher/download');
+        const url = new URL(result.url);
+        if (url.protocol !== 'https:') throw new Error('Небезопасный адрес загрузки');
+        window.location.href = url.href;
+        showToast('Скачивание Starlite.exe запущено...', 'success');
+    } catch (error) {
+        showToast(error.message || 'Не удалось получить ссылку на лаунчер', 'error');
+    }
 }
 
 function handleResetHwid() {

@@ -1,0 +1,21 @@
+[build]
+  command = "node prepare-static-host.js"
+  publish = "static-host"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://starlite-production.up.railway.app/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/healthz"
+  to = "https://starlite-production.up.railway.app/healthz"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/avatars/*"
+  to = "https://starlite-production.up.railway.app/avatars/:splat"
+  status = 200
+  force = true
