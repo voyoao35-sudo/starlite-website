@@ -11,3 +11,13 @@ cloudflared.exe
 public/downloads/starlite-bundle.zip
 public/downloads/*.tmp
 public/downloads/*.cache
+
+data
+public/downloads/**/*.exe
+public/downloads/**/*.zip
+public/downloads/**/*.dat
+public/downloads/**/*.jar
+public/downloads/*.exe
+public/downloads/*.zip
+public/downloads/*.dat
+public/downloads/*.jar

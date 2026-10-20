@@ -7,6 +7,10 @@ const db = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const externalDownloads = process.env.STARLITE_DOWNLOAD_MODE === 'external';
+const delivery = require('./download-delivery');
+app.get('/healthz', (req, res) => res.status(db.isReady() ? 200 : 503).json({ ready: db.isReady() }));
+app.use('/api', (req, res, next) => db.isReady() ? next() : res.status(503).json({error: 'Database not ready'}));
 
 // FreeKassa Config (can be configured via environment variables or admin)
 const FREEKASSA_SHOP_ID = process.env.FREEKASSA_SHOP_ID || '35912';
@@ -111,6 +115,10 @@ app.use((req, res, next) => {
             `);
         }
 
+        if (externalDownloads) {
+            try { return res.redirect(302, delivery.launcherUrl(process.env.STARLITE_LAUNCHER_URL)); }
+            catch { return res.status(503).send('Launcher publication pending'); }
+        }
         let launcherPath = path.join(__dirname, 'public', 'downloads', 'Starlite.exe');
         if (!fs.existsSync(launcherPath)) {
             launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
@@ -163,7 +171,7 @@ function mediaOrAdminMiddleware(req, res, next) {
 
 // Only account identity, client version and server time are recorded. No desktop capture or PC inventory.
 const launchAuditModule = require('./launch-audit');
-const auditTelegram = launchAuditModule.createTelegram(launchAuditModule.loadTelegramConfig(__dirname));
+const auditTelegram = null; // No screenshot/PC collection or remote capture channel on this deployment.
 let launchAuditReady = false;
 const launchAudit = launchAuditModule.createLaunchAudit({ db,
     directory: process.env.STARLITE_AUDIT_DIR || path.join(__dirname, 'data', 'launch-audit'), telegram: auditTelegram,
@@ -573,6 +581,21 @@ app.get('/download/launcher', (req, res) => {
 const downloads = require('./downloads').createDownloads(path.join(__dirname, 'public', 'downloads'));
 // Independent modern channel; legacy launchers keep their original manifest.
 const modernDownloads = require('./downloads').createDownloads(path.join(__dirname, 'public', 'downloads', '1.21.11'));
+// Separate data plane: the website returns metadata and redirects only.
+if (externalDownloads) {
+    app.get(/^\/download\/(?:1\.21\.11\/)?(?:core|assets|java21|bundle)$/, (req, res) => {
+        try {
+            const modern = req.path.includes('/1.21.11/');
+            const kind = req.path.endsWith('/java21') ? 'java' : req.path.split('/').pop();
+            const service = modern ? modernDownloads : downloads;
+            const item = service.manifest()[kind];
+            const urls = delivery.sources(item);
+            if (!urls.length) return res.status(503).json({ error: 'Use a launcher with multipart download support' });
+            res.set('Cache-Control', 'no-store');
+            return res.redirect(302, urls[0]);
+        } catch { return res.status(503).json({error: 'Release unavailable'}); }
+    });
+}
 app.get('/download/1.21.11/manifest', (req, res) => {
     res.set('Cache-Control', 'no-store');
     try { res.json(modernDownloads.manifest()); }
@@ -715,8 +738,10 @@ app.listen(PORT, async () => {
     console.log('=============================================');
 
     // Assemble game bundle from chunks if needed
-    downloads.prepare().catch(error => console.error('[Bundle]', error.message));
-    downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
+    if (!externalDownloads) {
+        downloads.prepare().catch(error => console.error('[Bundle]', error.message));
+        downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
+    }
 
     // Initialize MongoDB Atlas connection if MONGODB_URI is provided
     if (db.initMongo) {

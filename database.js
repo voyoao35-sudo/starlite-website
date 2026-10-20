@@ -111,7 +111,8 @@ try {
     dns.setServers(['8.8.8.8', '1.1.1.1']);
 } catch (_) {}
 
-const DEFAULT_MONGO_URI = 'mongodb+srv://voyoao35_db_user:484TBWDW3zUPDtOl@starlite.mdqa51e.mongodb.net/?retryWrites=true&w=majority&appName=Starlite';
+const DEFAULT_MONGO_URI = '';
+const REQUIRE_MONGO = process.env.STARLITE_REQUIRE_MONGO === '1';
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URL || DEFAULT_MONGO_URI;
 let mongoClient = null;
 let mongoDb = null;
@@ -123,6 +124,7 @@ let pendingMongoSync = false;
 
 async function initMongo() {
     if (!MONGODB_URI) {
+        if (REQUIRE_MONGO) throw new Error('MONGODB_URI must be configured for migration');
         console.log('[Database] MONGODB_URI is not set. Using local JSON database storage.');
         return;
     }
@@ -159,10 +161,13 @@ async function initMongo() {
             restoreAvatarsToDisk();
             saveDbLocal();
         } else {
+            if (REQUIRE_MONGO) throw new Error('Existing database state is required; refusing to seed');
             console.log('[Database] Remote MongoDB is empty. Seeding initial data from local database.json...');
             await syncToMongoNow();
         }
     } catch (err) {
+        isMongoConnected = false;
+        if (REQUIRE_MONGO) throw new Error('Existing database unavailable; migration did not change remote state');
         console.error('[Database] MongoDB connection failed:', err.message);
         console.log('[Database] Falling back to local JSON database storage.');
     }
@@ -237,7 +242,7 @@ function saveDb() {
     scheduleMongoSync();
 }
 
-loadDb();
+if (!REQUIRE_MONGO) loadDb();
 
 // Cryptography helpers
 function hashPassword(password, salt) {
@@ -774,6 +779,7 @@ function getStats() {
 }
 
 module.exports = {
+    isReady: () => !REQUIRE_MONGO || isMongoConnected,
     getLaunchAuditSessions: () => { if (!db.launchAuditSessions) db.launchAuditSessions = {}; return db.launchAuditSessions; },
     saveLaunchAuditSessions: sessions => { db.launchAuditSessions = sessions; saveDb(); },
     findUserByUsername,
