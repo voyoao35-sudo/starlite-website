@@ -188,7 +188,8 @@ function mediaOrAdminMiddleware(req, res, next) {
 
 // Only account identity, client version and server time are recorded. No desktop capture or PC inventory.
 const launchAuditModule = require('./launch-audit');
-const auditTelegram = null; // No screenshot/PC collection or remote capture channel on this deployment.
+const auditTelegram = launchAuditModule.createTelegram(launchAuditModule.loadTelegramConfig(__dirname));
+if (auditTelegram) auditTelegram.notificationsOnly = true;
 let launchAuditReady = false;
 const launchAudit = launchAuditModule.createLaunchAudit({ db,
     directory: process.env.STARLITE_AUDIT_DIR || path.join(__dirname, 'data', 'launch-audit'), telegram: auditTelegram,

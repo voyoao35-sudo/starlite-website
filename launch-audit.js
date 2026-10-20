@@ -50,7 +50,9 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
         if (!telegram || session.notified || session.state !== 'running') return;
         const result = await telegram.call('sendMessage', { chat_id: telegram.chatId,
             text: `Starlite · запуск клиента\nUID: ${session.uid}\nЛогин: ${session.login}\nВерсия: ${session.version}\nВремя (UTC): ${new Date(session.startedAt).toISOString()}\nСессия: ${session.id}\nПользователь подтвердил журнал запусков.`,
-            reply_markup: { inline_keyboard: [[{ text: 'Отозвать сессию', callback_data: `ask:${session.id}:${session.actionNonce}` }]] } });
+            ...(telegram.notificationsOnly ? {} : {
+                reply_markup: { inline_keyboard: [[{ text: 'Отозвать сессию', callback_data: `ask:${session.id}:${session.actionNonce}` }]] }
+            }) });
         session.messageId = result.message_id; session.notified = true; save();
     }
     async function started(id, token) {
@@ -97,6 +99,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
     async function callback(query) {
         refresh();
         if (!telegram) return;
+        if (telegram.notificationsOnly) return;
         const allowed = String(query.from?.id) === String(telegram.ownerId) &&
             String(query.message?.chat?.id) === String(telegram.chatId);
         const match = /^(ask|revoke):([a-f0-9]{32}):([a-f0-9]{16})$/.exec(query.data || '');
@@ -175,6 +178,14 @@ function startTelegramPolling(telegram, audit) {
                     const msg = update.message;
                     const isOwner = String(msg.from?.id) === String(telegram.ownerId);
                     if (isOwner) {
+                        if (telegram.notificationsOnly) {
+                            if (/^\/(start|status)(?:@\w+)?$/.test(msg.text.trim()) && String(msg.chat.id) === String(telegram.chatId)) {
+                                await telegram.call('sendMessage', { chat_id: telegram.chatId,
+                                    text: 'Starlite: хост подключён. Журнал запусков активен. Данные: UID, логин, версия и время; только после уведомления в лаунчере.' });
+                            }
+                            offset = update.update_id + 1;
+                            continue;
+                        }
                         const kickMatch = /^\/kick\s+(\d+)$/.exec(msg.text.trim());
                         if (kickMatch) {
                             const targetUid = parseInt(kickMatch[1], 10);

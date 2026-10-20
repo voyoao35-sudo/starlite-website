@@ -24,6 +24,22 @@ function query(data, { from = 123, chat = 123, message = 10 } = {}) {
     return { id: 'callback-fixture', data, from: { id: from }, message: { message_id: message, chat: { id: chat } } };
 }
 
+test('notifications-only deployment sends minimal launch notice without remote control buttons', async t => {
+    const { options, user, calls } = fixture(t);
+    options.telegram.notificationsOnly = true;
+    const audit = createLaunchAudit(options);
+    const session = audit.create(user, '1.16.5', 'launch-audit-v1');
+    await audit.started(session.id, session.token);
+    const notification = calls.find(call => call.method === 'sendMessage');
+    assert.ok(notification);
+    assert.equal(notification.body.reply_markup, undefined);
+    assert.match(notification.body.text, /UID: 42/);
+    assert.doesNotMatch(JSON.stringify(notification.body), /screenshot|hardware|sendPhoto|password/i);
+    const count = calls.length;
+    await audit.callback(query('ask:' + session.id + ':0000000000000000'));
+    assert.equal(calls.length, count);
+});
+
 test('authentic account identity, explicit notice, versions, subscription and rate limit', t => {
     const { audit, user } = fixture(t);
     assert.throws(() => audit.create(user, '1.21.11', false), /подтвердить/);
