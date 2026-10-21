@@ -144,6 +144,11 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
 }
 
 function loadTelegramConfig(directory, env = process.env) {
+    if (env.STARLITE_TELEGRAM_RELAY_URL || env.STARLITE_TELEGRAM_RELAY_KEY) {
+        if (env.STARLITE_TELEGRAM_RELAY_URL !== 'https://starlite-client.netlify.app/.netlify/functions/telegram-relay' ||
+            !/^[a-f0-9]{64}$/.test(env.STARLITE_TELEGRAM_RELAY_KEY || '')) return null;
+        return { relayUrl: env.STARLITE_TELEGRAM_RELAY_URL, relayKey: env.STARLITE_TELEGRAM_RELAY_KEY };
+    }
     const file = path.join(directory, '.private', 'telegram.json');
     const local = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
     const token = env.STARLITE_TELEGRAM_TOKEN || local.token;
@@ -154,6 +159,20 @@ function loadTelegramConfig(directory, env = process.env) {
 }
 function createTelegram(config, fetchImpl = globalThis.fetch) {
     if (!config) return null;
+    if (config.relayUrl) return { notificationsOnly: true, relay: true, async call(method, body) {
+        if (method !== 'sendMessage') throw new Error('Unsupported relay operation');
+        try {
+            const data = JSON.stringify({ text: body.text });
+            const timestamp = String(Date.now());
+            const signature = crypto.createHmac('sha256', config.relayKey).update(timestamp + '\n' + data).digest('hex');
+            const response = await fetchImpl(config.relayUrl, { method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Starlite-Time': timestamp, 'X-Starlite-Signature': signature },
+                body: data, signal: AbortSignal.timeout(15000) });
+            const result = await response.json();
+            if (!response.ok || !result.ok) throw new Error();
+            return result.result;
+        } catch { throw new Error('Telegram temporarily unavailable'); }
+    } };
     return { ownerId: config.ownerId, chatId: config.chatId, async call(method, body) {
         try {
             const response = await fetchImpl(`https://api.telegram.org/bot${config.token}/${method}`, {
@@ -166,7 +185,7 @@ function createTelegram(config, fetchImpl = globalThis.fetch) {
     } };
 }
 function startTelegramPolling(telegram, audit) {
-    if (!telegram) return () => {};
+    if (!telegram || telegram.relay) return () => {};
     let offset = 0, stopped = false, timer;
     async function poll() {
         try {
