@@ -536,7 +536,7 @@ app.post('/api/admin/users/:uid/role', authMiddleware, adminMiddleware, (req, re
 });
 
 app.get('/api/admin/keys', authMiddleware, adminMiddleware, (req, res) => {
-    res.json({ success: true, keys: db.getAllKeys() });
+    res.json({ success: true, keys: db.getAllKeys(), customDuration: true });
 });
 
 app.post('/api/admin/keys/generate', authMiddleware, adminMiddleware, (req, res) => {

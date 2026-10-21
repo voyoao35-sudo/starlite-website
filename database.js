@@ -3,6 +3,7 @@ const { repairActivityText } = require('./activity-text');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { parseKeyDuration } = require('./key-duration');
 
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'database.json');
@@ -445,8 +446,7 @@ function sanitizeUser(user) {
 // Key system
 function createKeys(count, duration, note = '', creatorUid = 1) {
     const created = [];
-    const validDurations = ['30d', '180d', 'lifetime'];
-    const dur = validDurations.includes(duration) ? duration : '30d';
+    const dur = parseKeyDuration(duration).duration;
 
     for (let i = 0; i < count; i++) {
         let code = generateKeyCode();
@@ -490,10 +490,7 @@ function redeemKey(code, uid) {
     }
 
     const now = Date.now();
-    let days = 0;
-    if (key.duration === '30d') days = 30;
-    else if (key.duration === '180d') days = 180;
-    else if (key.duration === '365d') days = 365;
+    const { days } = parseKeyDuration(key.duration);
 
     if (key.duration === 'lifetime') {
         user.subscription = {
