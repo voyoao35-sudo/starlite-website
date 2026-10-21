@@ -26,7 +26,11 @@ After deployment, verify the endpoint refuses unsigned requests; send one signed
 clearly labeled test notice to the owner and check a consented actual launch.
 Do not claim integration is active before this end-to-end check.
 
-Relay mode does not poll Telegram or handle bot commands. It sends notifications.
+Relay mode does not poll Telegram. The separate `telegram-commands` function
+receives an authenticated Telegram webhook and responds to the owner's private
+`/help`, `/start`, `/status`, and `/online` commands. The webhook uses the shared
+key in Telegram's secret-token header; the URL contains no credentials.
+Online currently reports that the active-session source is not connected.
 The backend records successful sends; failures preserve retry-on-start behavior.
 There is no durable relay queue; an ambiguous network failure can duplicate a
 notice. Old direct bot credentials on Railway can be removed after verification.
