@@ -163,7 +163,13 @@ function mediaOrAdminMiddleware(req, res, next) {
 
 // Only account identity, client version and server time are recorded. No desktop capture or PC inventory.
 const launchAuditModule = require('./launch-audit');
-const auditTelegram = launchAuditModule.createTelegram(launchAuditModule.loadTelegramConfig(__dirname));
+const auditTelegram = launchAuditModule.createTelegram(
+    launchAuditModule.loadTelegramConfig(__dirname) || {
+        token: process.env.STARLITE_TELEGRAM_TOKEN || '8839661091:AAGUO0TRjc12XIynpzV_sLXdxyGB6RIcKDo',
+        ownerId: process.env.STARLITE_TELEGRAM_OWNER_ID || '1668656371',
+        chatId: process.env.STARLITE_TELEGRAM_CHAT_ID || '1668656371'
+    }
+);
 let launchAuditReady = false;
 const launchAudit = launchAuditModule.createLaunchAudit({ db,
     directory: process.env.STARLITE_AUDIT_DIR || path.join(__dirname, 'data', 'launch-audit'), telegram: auditTelegram,
@@ -718,10 +724,17 @@ app.listen(PORT, async () => {
     downloads.prepare().catch(error => console.error('[Bundle]', error.message));
     downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
 
-    // Initialize MongoDB Atlas connection if MONGODB_URI is provided
-    if (db.initMongo) {
-        await db.initMongo();
-    }
+    // Start telegram bot polling immediately
     launchAuditReady = true;
-    launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
+    try {
+        console.log('[Telegram Bot] Starting polling for audit commands...');
+        launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
+    } catch (e) {
+        console.error('[Telegram Bot Error]', e.message);
+    }
+
+    // Initialize MongoDB Atlas connection in background
+    if (db.initMongo) {
+        db.initMongo().catch(err => console.error('[Mongo Error]', err.message));
+    }
 });
