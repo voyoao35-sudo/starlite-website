@@ -1,0 +1,23 @@
+# Existing MongoDB only. Game archives are redirected to verified GitHub releases.
+services:
+  - type: web
+    name: starlite-client
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: codex/northflank-download-migration
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeployTrigger: commit
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: STARLITE_REQUIRE_MONGO
+        value: "1"
+      - key: STARLITE_DOWNLOAD_MODE
+        value: external
+      - key: MONGODB_URI
+        sync: false
+      - key: STARLITE_LAUNCHER_URL
+        sync: false
