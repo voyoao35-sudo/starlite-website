@@ -34,7 +34,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
     function create(user, version, noticeAccepted) {
         refresh();
         if (!validSubscription(user, now())) throw Object.assign(new Error('Нет активной лицензии'), { status: 403 });
-        if (noticeAccepted !== 'launch-audit-v1') throw Object.assign(new Error('Нужно подтвердить уведомление о журнале запусков'), { status: 400 });
+        if (!['launch-audit-v1', 'account-policy-v1'].includes(noticeAccepted)) throw Object.assign(new Error('Нужно подтвердить уведомление о журнале запусков'), { status: 400 });
         if (!['1.16.5', '1.21.11'].includes(version)) throw Object.assign(new Error('Неизвестная версия клиента'), { status: 400 });
         if (Object.values(sessions).filter(s => s.uid === user.uid && now() - s.createdAt < 60000).length >= 5) {
             throw Object.assign(new Error('Слишком частые запуски'), { status: 429 });
@@ -49,7 +49,7 @@ function createLaunchAudit({ db, directory, telegram = null, now = Date.now, isR
     async function notify(session) {
         if (!telegram || session.notified || session.state !== 'running') return;
         const result = await telegram.call('sendMessage', { chat_id: telegram.chatId,
-            text: `Starlite · запуск клиента\nUID: ${session.uid}\nЛогин: ${session.login}\nВерсия: ${session.version}\nВремя (UTC): ${new Date(session.startedAt).toISOString()}\nСессия: ${session.id}\nПользователь подтвердил журнал запусков.`,
+            text: `Starlite · запуск клиента\nUID: ${session.uid}\nЛогин: ${session.login}\nВерсия: ${session.version}\nВремя (UTC): ${new Date(session.startedAt).toISOString()}\nСессия: ${session.id}\nИсточник: авторизованный лаунчер Starlite.`,
             ...(telegram.notificationsOnly ? {} : {
                 reply_markup: { inline_keyboard: [[{ text: 'Отозвать сессию', callback_data: `ask:${session.id}:${session.actionNonce}` }]] }
             }) });

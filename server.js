@@ -196,6 +196,21 @@ const launchAudit = launchAuditModule.createLaunchAudit({ db,
     isReady: () => launchAuditReady });
 launchAudit.install(app, authMiddleware);
 
+// Telegram delivers commands to Render directly; no Netlify relay or polling is used in webhook mode.
+if (process.env.STARLITE_TELEGRAM_WEBHOOK_SECRET) {
+    const telegramCommands = require('./netlify/functions/telegram-commands').createHandler({
+        ...process.env,
+        STARLITE_TELEGRAM_RELAY_KEY: process.env.STARLITE_TELEGRAM_WEBHOOK_SECRET,
+        STARLITE_TELEGRAM_HOST: 'Render'
+    });
+    app.post('/api/telegram/webhook', async (req, res) => {
+        const reply = await telegramCommands({ httpMethod: 'POST', headers: req.headers,
+            body: JSON.stringify(req.body) });
+        res.set(reply.headers).status(reply.statusCode).send(reply.body);
+    });
+}
+
+
 // ─── AUTH ROUTES ─────────────────────────────────────────────────────────────
 
 app.post('/api/auth/register', (req, res) => {
@@ -765,7 +780,7 @@ async function start() {
         downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
     }
 
-    launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
+    if (!process.env.STARLITE_TELEGRAM_WEBHOOK_SECRET) launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
     if (auditTelegram) {
         auditTelegram.call('getMe', {}).then(bot => {
             console.log('[Telegram] Launch notifications connected: @' + bot.username);

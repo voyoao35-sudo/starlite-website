@@ -20,6 +20,8 @@ function createHandler(env = process.env, fetchImpl = globalThis.fetch) {
         const command = /^\/(\w+)(?:@Starlitelogs_bot)?(?:\s|$)/i.exec(message.text.trim())?.[1]?.toLowerCase();
         if (!command) return reply(200, { ok: true });
         const text = command === 'start' || command === 'help' ? help
+            : command === 'status' && env.STARLITE_TELEGRAM_HOST === 'Render' ? 'Starlite · статус\nБот подключён к Render. Сервер и база доступны.\nЖурнал принимает UID, логин, версию и время запуска.'
+            : command === 'online' && env.STARLITE_TELEGRAM_HOST === 'Render' ? 'Starlite · онлайн\nБот получает события запуска. Достоверный список игроков онлайн не ведётся.'
             : command === 'status' ? 'Starlite · статус\nОбработчик команд на Netlify работает.\nПриём уведомлений готов. Автоматические события лаунчера ещё требуют обновления сервера Starlite; их работа пока не подтверждена.'
             : command === 'online' ? 'Starlite · онлайн\nПолучение активных сессий ещё не подключено: требуется обновление сервера Starlite.\nЭто не означает, что онлайн равен нулю.'
             : 'Неизвестная команда. Доступные команды: /help, /status, /online.';
