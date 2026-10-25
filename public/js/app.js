@@ -497,7 +497,7 @@ function showPricingForExtend() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
-async function handleDownloadClient() {
+function handleDownloadClient() {
     if (!currentUser) {
         showToast('Для скачивания лаунчера необходимо войти в аккаунт!', 'warning');
         openAuthModal('login');
@@ -511,15 +511,9 @@ async function handleDownloadClient() {
         return;
     }
 
-    try {
-        const result = await window.api.request('/launcher/download');
-        const url = new URL(result.url);
-        if (url.protocol !== 'https:') throw new Error('Небезопасный адрес загрузки');
-        window.location.href = url.href;
-        showToast('Скачивание Starlite.exe запущено...', 'success');
-    } catch (error) {
-        showToast(error.message || 'Не удалось получить ссылку на лаунчер', 'error');
-    }
+    showToast('Скачивание Starlite.exe запущено...', 'success');
+    const token = window.api ? window.api.token : (localStorage.getItem('starlite_token') || '');
+    window.location.href = '/download/launcher?t=' + Date.now() + '&token=' + encodeURIComponent(token);
 }
 
 function handleResetHwid() {
@@ -829,22 +823,11 @@ async function handleAdminChangeRole(uid, role) {
 
 async function handleAdminGenKeys(e) {
     e.preventDefault();
-    const rawDays = document.getElementById('gen-duration').value.trim();
-    const days = Number(rawDays);
-    if (!/^\d+$/.test(rawDays) || !Number.isSafeInteger(days) || days < 0 || days > 36500) {
-        showToast('Введите целое количество дней от 0 до 36500. 0 — навсегда.', 'error');
-        return;
-    }
-    const duration = days === 0 ? 'lifetime' : `${days}d`;
+    const duration = document.getElementById('gen-duration').value;
     const count = document.getElementById('gen-count').value;
     const note = document.getElementById('gen-note').value;
 
     try {
-        // Older servers silently replace unknown durations with 30 days.
-        if (!['30d', '180d', 'lifetime'].includes(duration)) {
-            const capabilities = await window.api.adminGetKeys();
-            if (!capabilities.customDuration) throw new Error('Сервер ещё не обновлён для произвольного срока ключей. Создание отменено.');
-        }
         const res = await window.api.adminGenerateKeys(count, duration, note);
         showToast(`Создано ключей: ${res.keys.length}`, 'success');
         loadAdminData();
