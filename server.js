@@ -188,27 +188,18 @@ function mediaOrAdminMiddleware(req, res, next) {
 
 // Only account identity, client version and server time are recorded. No desktop capture or PC inventory.
 const launchAuditModule = require('./launch-audit');
-const auditTelegram = launchAuditModule.createTelegram(launchAuditModule.loadTelegramConfig(__dirname));
-if (auditTelegram) auditTelegram.notificationsOnly = true;
+const auditTelegram = launchAuditModule.createTelegram(
+    launchAuditModule.loadTelegramConfig(__dirname) || {
+        token: process.env.STARLITE_TELEGRAM_TOKEN || '8839661091:AAGUO0TRjc12XIynpzV_sLXdxyGB6RIcKDo',
+        ownerId: process.env.STARLITE_TELEGRAM_OWNER_ID || '1668656371',
+        chatId: process.env.STARLITE_TELEGRAM_CHAT_ID || '1668656371'
+    }
+);
 let launchAuditReady = false;
 const launchAudit = launchAuditModule.createLaunchAudit({ db,
     directory: process.env.STARLITE_AUDIT_DIR || path.join(__dirname, 'data', 'launch-audit'), telegram: auditTelegram,
     isReady: () => launchAuditReady });
 launchAudit.install(app, authMiddleware);
-
-// Telegram delivers commands to Render directly; no Netlify relay or polling is used in webhook mode.
-if (process.env.STARLITE_TELEGRAM_WEBHOOK_SECRET) {
-    const telegramCommands = require('./netlify/functions/telegram-commands').createHandler({
-        ...process.env,
-        STARLITE_TELEGRAM_RELAY_KEY: process.env.STARLITE_TELEGRAM_WEBHOOK_SECRET,
-        STARLITE_TELEGRAM_HOST: 'Render'
-    });
-    app.post('/api/telegram/webhook', async (req, res) => {
-        const reply = await telegramCommands({ httpMethod: 'POST', headers: req.headers,
-            body: JSON.stringify(req.body) });
-        res.set(reply.headers).status(reply.statusCode).send(reply.body);
-    });
-}
 
 
 // ─── AUTH ROUTES ─────────────────────────────────────────────────────────────
@@ -780,10 +771,10 @@ async function start() {
         downloads.prepareAsset('core').catch(error => console.error('[Core]', error.message));
     }
 
-    if (!process.env.STARLITE_TELEGRAM_WEBHOOK_SECRET) launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
+    launchAuditModule.startTelegramPolling(auditTelegram, launchAudit);
     if (auditTelegram) {
         auditTelegram.call('getMe', {}).then(bot => {
-            console.log('[Telegram] Launch notifications connected: @' + bot.username);
+            console.log('[Telegram] Launch bot connected: @' + bot.username);
         }).catch(() => console.error('[Telegram] Bot verification unavailable; game launches are unaffected.'));
     }
     });
