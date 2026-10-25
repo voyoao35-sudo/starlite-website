@@ -719,12 +719,8 @@
                 </h4>
                 <form onsubmit="handleAdminGenKeys(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <div>
-                        <label class="block text-[10px] font-mono text-slate-400 mb-1">Срок</label>
-                        <select id="gen-duration" class="w-full bg-[#06080e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-[#8cb8ff] focus:outline-none">
-                            <option value="30d">30 Дней</option>
-                            <option value="180d">180 Дней</option>
-                            <option value="lifetime">Навсегда (Lifetime)</option>
-                        </select>
+                        <label for="gen-duration" class="block text-[10px] font-mono text-slate-400 mb-1">Срок в днях · 0 — навсегда</label>
+                        <input id="gen-duration" type="number" inputmode="numeric" min="0" max="36500" step="1" value="30" required class="w-full bg-[#06080e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-[#8cb8ff] focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-[10px] font-mono text-slate-400 mb-1">Количество</label>
@@ -933,7 +929,7 @@
     <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="js/account-state.js?v=20261020"></script>
-    <script src="js/app.js?v=20261020"></script>
+    <script src="js/app.js?v=20261025-key-days"></script>
 </body>
 </html>
 
