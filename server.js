@@ -116,6 +116,9 @@ app.use((req, res, next) => {
             launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
         }
         if (fs.existsSync(launcherPath)) {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+            res.set('Pragma', 'no-cache');
+            res.set('Expires', '0');
             return res.download(launcherPath, 'Starlite.exe');
         } else {
             return res.status(404).send('Launcher build not found');
@@ -570,6 +573,9 @@ app.get('/download/launcher', (req, res) => {
         launcherPath = path.join(__dirname, 'public', 'downloads', 'StarliteLauncher.exe');
     }
     if (fs.existsSync(launcherPath)) {
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
         res.download(launcherPath, 'Starlite.exe');
     } else {
         res.status(404).send('Launcher build not found');
