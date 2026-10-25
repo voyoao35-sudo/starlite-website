@@ -20,4 +20,4 @@ services:
       - key: MONGODB_URI
         sync: false
       - key: STARLITE_LAUNCHER_URL
-        sync: false
+        value: https://github.com/voyoao35-sudo/starlite-website/releases/download/launcher-2026.10.25-render/Starlite.exe

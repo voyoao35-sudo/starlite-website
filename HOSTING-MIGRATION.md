@@ -1,3 +1,13 @@
+## Render migration — 2026-10-25
+
+New public endpoint: https://starlite-client.onrender.com. Free Docker service `srv-dbetkom7bikc73bf0h00` in Frankfurt, managed by Blueprint `exs-dbetk7e7bikc73beus6g`, branch `codex/northflank-download-migration`. Existing MongoDB connection was explicitly authorized for the new workspace; no replacement database was created. Netlify production deploys are paused due to credits, so its static manifest remains stale.
+
+Launcher release: `launcher-2026.10.25-render`, SHA-256 `0ae7c4ef8a0272a51eb286a70f6a91152550f3c4190ea67a9f03bdef0076c31e`. Only its API address differs from the previous migration launcher. Users need to download this launcher once. Client artifacts remain on GitHub and are checked by hash; Render redirects instead of streaming binaries.
+
+Verified: health/readiness, public API, unauthenticated launcher rejection, direct core redirects for both channels, latest modern manifest and unchanged legacy manifest. Four Globalping probes returned HTTP 200 (Moscow, Saint Petersburg, Kyiv, Khmelnytskyi); this does not guarantee every ISP. 13 server/download tests and 14 actual launcher transport checks passed. Existing-account sign-in has not been exercised with a real user's credentials.
+
+Historical migration notes below describe previous hosts and may no longer reflect live deployment status.
+
 # Free hosting migration
 
 Status: Railway backend deployed at https://starlite-production.up.railway.app without a card, using the existing database (33 users and 6 keys loaded). Northflank was rejected because even its Sandbox requires card verification. Railway's ongoing $1 monthly allowance must be checked against actual server usage before describing it as a permanent hosting solution.
