@@ -289,6 +289,10 @@ function createTelegram(config, fetchImpl = globalThis.fetch) {
 function startTelegramPolling(telegram, audit) {
     if (!telegram) return () => {};
     let offset = 0, stopped = false, timer;
+    // Сбросить любой сторонний вебхук при старте polling
+    (async () => {
+        try { await telegram.call('deleteWebhook', { drop_pending_updates: false }); } catch {}
+    })();
     async function poll() {
         try {
             const updates = await telegram.call('getUpdates', { offset, timeout: 0, allowed_updates: ['callback_query', 'message'] });
@@ -382,7 +386,10 @@ function startTelegramPolling(telegram, audit) {
                 }
                 offset = update.update_id + 1;
             }
-        } catch { /* No token, URL or private payload is written to logs. */ }
+        } catch {
+            // Если вебхук снова был кем-то установлен — сбрасываем его
+            try { await telegram.call('deleteWebhook', { drop_pending_updates: false }); } catch {}
+        }
         if (!stopped) { timer = setTimeout(poll, 3000); timer.unref(); }
     }
     poll(); return () => { stopped = true; clearTimeout(timer); };
