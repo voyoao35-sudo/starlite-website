@@ -513,7 +513,7 @@ function handleDownloadClient() {
 
     showToast('Скачивание Starlite.exe запущено...', 'success');
     const token = window.api ? window.api.token : (localStorage.getItem('starlite_token') || '');
-    window.location.href = '/download/launcher?token=' + encodeURIComponent(token);
+    window.location.href = '/download/launcher?t=' + Date.now() + '&token=' + encodeURIComponent(token);
 }
 
 function handleResetHwid() {
