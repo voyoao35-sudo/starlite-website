@@ -299,7 +299,8 @@
         "sha256": "1db8cabc649caf0b296bee1f31e658e331a3954f1a809741c8811c47366f19c7",
         "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-2026.10.17-24a3cc8b9b9e-cf0095ba/bundle_part48.dat"
       }
-    ]
+    ],
+    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/runtime-full-2026.10.30/starlite-bundle-1.16.5.zip"
   },
   "assets": {
     "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-2026.10.17-24a3cc8b9b9e-cf0095ba/starlite-assets.zip",

@@ -396,6 +396,7 @@
         "sha256": "40253643624daf313a4f4508be667a2fa648054b63ea70352f54cdb60d1027b8",
         "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/client-1.21.11-2026.10.19-d4589fbceac3-dfef9515/bundle_part64.dat"
       }
-    ]
+    ],
+    "url": "https://github.com/voyoao35-sudo/starlite-website/releases/download/runtime-full-2026.10.30/starlite-bundle-1.21.11.zip"
   }
 }

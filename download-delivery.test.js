@@ -21,6 +21,16 @@ test('refuses insecure URLs and unrelated repositories', () => {
 test('multipart bundles do not require an assembled archive in the website', () => {
     assert.deepEqual(sources({ sha256: item.sha256, size: 12, parts: [] }), []);
 });
+
+test('published channels provide a full bundle URL for installed single-archive launchers', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    for (const channel of ['', '1.21.11/']) {
+        const release = JSON.parse(fs.readFileSync(path.join(__dirname, 'public/downloads', channel, 'release.json'), 'utf8'));
+        assert.ok(sources(release.bundle).length > 0, `Missing full bundle source for ${channel || '1.16.5'}`);
+        assert.equal(release.bundle.parts.reduce((total, part) => total + part.size, 0), release.bundle.size);
+    }
+});
 test('refuses invalid integrity metadata before redirecting', () => {
     for (const bad of [{ size: -1 }, { size: 1.2 }, { sha256: 'oops' }]) {
         assert.throws(() => sources({ ...item, ...bad }));
